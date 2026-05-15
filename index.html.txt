@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find My Mortgage – Loan Structure Mapper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<style>
+/* ── PRINT STYLES ── */
+@media print {
+  html, body { margin: 0 !important; padding: 0 !important; background: #f7f8fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #lsm-root { height: auto !important; min-height: unset !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; }
+  #lsm-canvas-wrap { overflow: visible !important; height: auto !important; flex: none !important; }
+  #lsm-canvas { min-height: unset !important; position: relative !important; }
+  .lsm-btn, #lsm-link-mode-btn { display: none !important; }
+  .lsm-icon-btn { display: none !important; }
+  .lsm-hint, .lsm-overlay { display: none !important; }
+  #lsm-toolbar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #lsm-logo-img { display: block !important; height: auto !important; width: auto !important; max-height: 36px !important; max-width: 200px !important; object-fit: contain !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-client-input-wrap { display: flex !important; }
+  .lsm-client-input { background: transparent !important; border: none !important; box-shadow: none !important; }
+  .lsm-toolbar-spacer { display: none !important; }
+  #lsm-summary-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-card-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-prop-card { break-inside: avoid; page-break-inside: avoid; }
+  .lsm-prop-type-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-indiv-lvr-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-joint-lvr-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-offset-chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-stat-box.lsm-group { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-cross-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-split-chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-primary-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .lsm-prop-card { position: static !important; display: inline-block !important; vertical-align: top !important; margin: 12px !important; width: 280px !important; }
+  #lsm-canvas { display: flex !important; flex-wrap: wrap !important; align-items: flex-start !important; padding: 20px !important; min-width: unset !important; }
+  #lsm-links-layer { display: none !important; }
+  #lsm-empty-state { display: none !important; }
+  .lsm-empty-state { display: none !important; }
+  .lsm-indiv-lvr-val { min-width: 38px !important; font-size: 11px !important; }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Figtree', sans-serif; }
+
+#lsm-root {
+  --lsm-primary: #141820;
+  --lsm-accent: #ec1560;
+  --lsm-bg: #f7f8fa;
+  --lsm-bg2: #eef0f5;
+  --lsm-bg3: #e6e9ee;
+  --lsm-white: #ffffff;
+  --lsm-text: #141820;
+  --lsm-text2: #3d4562;
+  --lsm-text3: #9ca3af;
+  --lsm-border: #e6e9ee;
+  --lsm-border2: #d1d5db;
+  --lsm-green: #0d7a52;
+  --lsm-green2: #12a36e;
+  --lsm-green3: #e0f5ed;
+  --lsm-blue: #1a4a9e;
+  --lsm-blue2: #2960cc;
+  --lsm-blue3: #e6eeff;
+  --lsm-gold: #b45309;
+  --lsm-gold2: #d97706;
+  --lsm-gold3: #fef3c7;
+  --lsm-shadow: 0 4px 24px rgba(20,24,32,0.08);
+  --lsm-shadow2: 0 8px 36px rgba(20,24,32,0.14);
+  display: flex; flex-direction: column; width: 100%;
+  border-radius: 12px; overflow: hidden;
+  border: 1.5px solid var(--lsm-border);
+  box-shadow: var(--lsm-shadow2);
+  background: var(--lsm-bg);
+  position: relative; height: 100vh; min-height: 480px;
+}
+
+/* ── TOOLBAR ── */
+#lsm-toolbar {
+  background: var(--lsm-primary); padding: 0 20px; height: 60px; min-height: 60px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 2px solid var(--lsm-accent); flex-shrink: 0; position: relative; z-index: 10;
+}
+.lsm-brand { display: flex; align-items: center; gap: 10px; margin-right: 12px; flex-shrink: 0; }
+.lsm-client-input-wrap { display: flex; align-items: center; gap: 7px; flex: 1; max-width: 320px; }
+.lsm-client-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.38); letter-spacing: 1.4px; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
+.lsm-client-input { background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.14); border-radius: 7px; padding: 6px 11px; font-size: 12.5px; font-weight: 700; color: #fff; outline: none; transition: border-color .18s, background .18s; width: 100%; caret-color: var(--lsm-accent); }
+.lsm-client-input::placeholder { color: rgba(255,255,255,0.28); font-weight: 400; }
+.lsm-client-input:focus { border-color: var(--lsm-accent); background: rgba(255,255,255,0.11); }
+.lsm-toolbar-spacer { flex: 1; }
+.lsm-btn { font-size: 12px; font-weight: 700; border-radius: 7px; padding: 8px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all .18s; white-space: nowrap; line-height: 1; text-decoration: none; border: none; }
+.lsm-btn svg { flex-shrink: 0; width: 12px; height: 12px; display: block; }
+.lsm-btn-accent { background: var(--lsm-accent); color: #fff; border: 2px solid var(--lsm-accent); }
+.lsm-btn-accent:hover { background: transparent; color: var(--lsm-accent); }
+.lsm-btn-ghost { background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15); color: #fff; }
+.lsm-btn-ghost:hover { background: rgba(255,255,255,0.13); }
+.lsm-btn-ghost.lsm-active { background: rgba(41,96,204,0.25); border-color: var(--lsm-blue2); color: #7fb3ff; }
+.lsm-btn-light { background: var(--lsm-white); color: var(--lsm-text); border: 1.5px solid var(--lsm-border2); }
+.lsm-btn-light:hover { background: var(--lsm-bg2); }
+
+/* ── LINK MODE PANEL ── */
+#lsm-link-panel {
+  display: none; position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
+  background: var(--lsm-primary); border: 1.5px solid var(--lsm-blue2);
+  border-radius: 10px; padding: 10px 18px; z-index: 50;
+  box-shadow: 0 8px 32px rgba(20,24,32,0.35);
+  display: none; align-items: center; gap: 12px; white-space: nowrap;
+}
+#lsm-link-panel.lsm-show { display: flex; }
+.lsm-link-panel-text { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.lsm-link-panel-text strong { color: #7fb3ff; }
+.lsm-link-panel-count {
+  background: rgba(41,96,204,0.3); border: 1px solid rgba(41,96,204,0.5);
+  border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; color: #7fb3ff;
+}
+.lsm-link-panel-done {
+  background: var(--lsm-blue2); color: #fff; border: none; border-radius: 6px;
+  padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .15s;
+}
+.lsm-link-panel-done:hover { background: #1a4a9e; }
+.lsm-link-panel-cancel {
+  background: transparent; color: rgba(255,255,255,0.45); border: none;
+  font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.lsm-link-panel-cancel:hover { color: var(--lsm-accent); }
+
+/* ── CANVAS ── */
+#lsm-canvas-wrap { position: relative; overflow: auto; flex: 1; background: var(--lsm-bg); }
+#lsm-canvas-bg { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(var(--lsm-bg3) 1px, transparent 1px), linear-gradient(90deg, var(--lsm-bg3) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.6; }
+#lsm-canvas { position: relative; min-height: 100%; min-width: 100%; }
+#lsm-links-layer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: visible; width: 100%; height: 100%; }
+
+/* ── SUMMARY BAR ── */
+#lsm-summary-bar { background: var(--lsm-primary); border-top: 2px solid var(--lsm-accent); padding: 0 20px; height: 52px; min-height: 52px; display: flex; align-items: center; flex-shrink: 0; overflow-x: auto; }
+.lsm-sum-item { display: flex; flex-direction: column; padding: 0 16px; border-right: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+.lsm-sum-item:first-child { padding-left: 0; }
+.lsm-sum-label { font-size: 8px; color: #FFF; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 2px; }
+.lsm-sum-value { font-size: 13px; font-weight: 700; color: #fff; }
+.lsm-sum-value.lsm-accent { color: var(--lsm-accent); }
+.lsm-sum-spacer { flex: 1; }
+.lsm-sum-client { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.lsm-sum-client span { color: rgba(255,255,255,0.75); font-weight: 700; }
+
+/* ── PROPERTY CARDS ── */
+.lsm-prop-card {
+  position: absolute; width: 288px; background: var(--lsm-white); border-radius: 12px;
+  border: 1.5px solid var(--lsm-border); box-shadow: var(--lsm-shadow); z-index: 10;
+  user-select: none; transition: border-color .2s, box-shadow .2s, transform .15s; overflow: hidden;
+}
+.lsm-prop-card:hover { box-shadow: var(--lsm-shadow2); }
+.lsm-prop-card.lsm-selected { border-color: var(--lsm-blue2) !important; box-shadow: 0 0 0 3px rgba(41,96,204,0.22), var(--lsm-shadow) !important; }
+.lsm-prop-card.lsm-is-primary { border-color: #d97706; box-shadow: 0 0 0 2px rgba(217,119,6,0.18), var(--lsm-shadow); }
+.lsm-prop-card.lsm-dragging { opacity: .92; z-index: 999; transform: scale(1.015); box-shadow: var(--lsm-shadow2); }
+
+/* Link mode: cards glow to invite selection */
+.lsm-link-mode .lsm-prop-card { cursor: pointer !important; }
+.lsm-link-mode .lsm-prop-card:not(.lsm-selected):hover { border-color: rgba(41,96,204,0.5) !important; box-shadow: 0 0 0 2px rgba(41,96,204,0.15), var(--lsm-shadow) !important; }
+
+.lsm-card-header { background: var(--lsm-primary); padding: 10px 12px; display: flex; align-items: flex-start; justify-content: space-between; cursor: grab; }
+.lsm-card-header:active { cursor: grabbing; }
+.lsm-card-meta { min-width: 0; flex: 1; }
+.lsm-card-eyebrow { font-size: 8.5px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: var(--lsm-accent); margin-bottom: 3px; }
+.lsm-card-name { font-size: 12px; font-weight: 700; color: #fff; max-width: 172px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lsm-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+.lsm-prop-type-row { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+.lsm-prop-type-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; padding: 2px 8px; font-size: 8.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1.5px solid transparent; cursor: pointer; transition: all .15s; }
+.lsm-prop-type-badge.oo { background: rgba(13,122,82,0.22); border-color: rgba(13,122,82,0.45); color: #4de8ac; }
+.lsm-prop-type-badge.inv { background: rgba(41,96,204,0.22); border-color: rgba(41,96,204,0.45); color: #7fb3ff; }
+.lsm-prop-type-badge svg { width: 9px; height: 9px; display: block; }
+
+.lsm-primary-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; padding: 2px 8px; font-size: 8.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1.5px solid transparent; cursor: pointer; transition: all .15s; }
+.lsm-primary-badge.is-primary { background: rgba(217,119,6,0.28); border-color: rgba(217,119,6,0.55); color: #fbbf24; }
+.lsm-primary-badge.not-primary { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.35); }
+.lsm-primary-badge.not-primary:hover { background: rgba(217,119,6,0.15); border-color: rgba(217,119,6,0.35); color: #fbbf24; }
+.lsm-primary-badge svg { width: 9px; height: 9px; display: block; }
+
+/* Hide primary badge when not in a linked group */
+.lsm-primary-badge.lsm-hidden { display: none !important; }
+
+.lsm-icon-btn { width: 25px; height: 25px; border-radius: 5px; border: none; background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.75); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s; }
+.lsm-icon-btn svg { width: 11px; height: 11px; display: block; }
+.lsm-icon-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.lsm-icon-btn.lsm-danger:hover { background: rgba(236,21,96,0.45); color: #fff; }
+
+.lsm-card-body { padding: 12px 12px 10px; }
+
+/* LVR bar */
+.lsm-indiv-lvr { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; background: var(--lsm-bg); border-radius: 6px; padding: 6px 9px; border: 1px solid var(--lsm-border); }
+.lsm-indiv-lvr-label { font-size: 9px; color: var(--lsm-text3); font-weight: 700; text-transform: uppercase; min-width: 30px; flex-shrink: 0; }
+.lsm-indiv-lvr-bar-wrap { flex: 1; height: 5px; background: var(--lsm-bg2); border-radius: 3px; overflow: hidden; min-width: 0; }
+.lsm-indiv-lvr-bar { height: 100%; border-radius: 3px; transition: width .4s; }
+.lsm-indiv-lvr-val { font-size: 11px; font-weight: 700; min-width: 38px; text-align: right; flex-shrink: 0; }
+
+.lsm-stat-row { display: flex; gap: 8px; margin-bottom: 9px; }
+.lsm-stat-box { flex: 1; background: var(--lsm-bg); border-radius: 6px; padding: 8px 10px; border: 1px solid var(--lsm-border); }
+.lsm-stat-box.lsm-group { background: var(--lsm-blue3); border-color: rgba(41,96,204,0.18); }
+.lsm-stat-label { font-size: 8.5px; color: var(--lsm-text3); font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3px; }
+.lsm-stat-box.lsm-group .lsm-stat-label { color: var(--lsm-blue2); }
+.lsm-stat-value { font-size: 13px; font-weight: 700; color: var(--lsm-text); }
+.lsm-stat-box.lsm-group .lsm-stat-value { color: var(--lsm-blue); }
+
+/* Split loans */
+.lsm-splits-wrap { margin-bottom: 9px; }
+.lsm-splits-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.lsm-splits-title { font-size: 8.5px; font-weight: 700; color: var(--lsm-text3); letter-spacing: 1px; text-transform: uppercase; }
+.lsm-add-split-btn { display: inline-flex; align-items: center; gap: 3px; background: rgba(236,21,96,0.08); color: var(--lsm-accent); border: 1px solid rgba(236,21,96,0.2); border-radius: 4px; padding: 2px 7px; font-size: 9px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.lsm-add-split-btn:hover { background: var(--lsm-accent); color: #fff; }
+.lsm-add-split-btn svg { width: 8px; height: 8px; display: block; }
+.lsm-split-chip { display: flex; align-items: center; gap: 7px; background: #fdf0f4; border-radius: 6px; padding: 5px 8px; margin-bottom: 4px; border: 1px solid rgba(236,21,96,0.14); }
+.lsm-split-chip-icon { color: var(--lsm-accent); display: flex; align-items: center; }
+.lsm-split-chip-icon svg { width: 11px; height: 11px; display: block; }
+.lsm-split-chip-label { font-size: 9.5px; font-weight: 600; color: var(--lsm-text2); flex-shrink: 0; }
+.lsm-split-chip-amount { font-size: 12px; font-weight: 700; color: var(--lsm-accent); flex: 1; text-align: right; }
+
+/* Joint/cross sections */
+.lsm-joint-lvr { background: rgba(41,96,204,0.06); border-radius: 6px; padding: 8px 10px; margin-bottom: 9px; border: 1px solid rgba(41,96,204,0.15); }
+.lsm-joint-lvr-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.lsm-joint-lvr-title { font-size: 8.5px; font-weight: 700; color: var(--lsm-blue2); letter-spacing: 0.7px; text-transform: uppercase; }
+.lsm-joint-lvr-val { font-size: 11px; font-weight: 700; }
+.lsm-joint-lvr-bar-wrap { height: 5px; background: rgba(41,96,204,0.12); border-radius: 3px; overflow: hidden; }
+.lsm-joint-lvr-bar { height: 100%; border-radius: 3px; transition: width .4s; }
+
+.lsm-cross-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--lsm-blue3); color: var(--lsm-blue2); border-radius: 20px; padding: 3px 9px; font-size: 9px; font-weight: 700; margin-bottom: 7px; border: 1px solid rgba(41,96,204,0.18); }
+.lsm-cross-badge svg { width: 10px; height: 10px; display: block; }
+
+.lsm-primary-info { display: flex; align-items: center; gap: 6px; background: rgba(217,119,6,0.10); border: 1px solid rgba(217,119,6,0.28); border-radius: 6px; padding: 5px 9px; font-size: 9px; font-weight: 700; color: #d97706; margin-bottom: 7px; }
+.lsm-primary-info svg { width: 10px; height: 10px; display: block; flex-shrink: 0; }
+
+/* Unlink from group button (per-card) */
+.lsm-unlink-btn { display: flex; align-items: center; gap: 5px; background: rgba(236,21,96,0.07); color: var(--lsm-accent); border: 1px solid rgba(236,21,96,0.2); border-radius: 5px; padding: 5px 9px; font-size: 9.5px; font-weight: 700; cursor: pointer; margin-bottom: 8px; transition: all .18s; width: 100%; justify-content: center; }
+.lsm-unlink-btn:hover { background: var(--lsm-accent); color: #fff; }
+.lsm-unlink-btn svg { width: 10px; height: 10px; display: block; }
+
+/* Offsets */
+.lsm-offsets-wrap { border-top: 1px solid var(--lsm-border); padding: 9px 12px 11px; }
+.lsm-offsets-head { display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; font-weight: 700; color: var(--lsm-text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
+.lsm-offsets-count { background: var(--lsm-green3); color: var(--lsm-green2); border-radius: 10px; padding: 1px 6px; font-size: 8.5px; font-weight: 700; }
+.lsm-offset-chip { display: flex; align-items: center; gap: 7px; background: var(--lsm-green3); border-radius: 6px; padding: 5px 8px; margin-bottom: 5px; border: 1px solid rgba(13,122,82,0.16); }
+.lsm-offset-chip-icon { color: var(--lsm-green2); display: flex; align-items: center; }
+.lsm-offset-chip-icon svg { width: 11px; height: 11px; display: block; }
+.lsm-offset-chip-name { font-size: 10.5px; font-weight: 600; color: var(--lsm-green); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lsm-offset-remove { cursor: pointer; width: 17px !important; height: 17px !important; min-width: 17px !important; max-width: 17px !important; min-height: 17px !important; max-height: 17px !important; aspect-ratio: 1 / 1 !important; border-radius: 50% !important; background: rgba(13,122,82,0.15); color: var(--lsm-green); font-size: 11px; transition: all .15s; border: none !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0; font-weight: 700; line-height: 1 !important; padding: 0 !important; box-sizing: border-box !important; }
+.lsm-offset-remove:hover { background: var(--lsm-accent); color: #fff; }
+
+/* Modals */
+.lsm-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(20,24,32,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.lsm-modal { background: var(--lsm-white); border-radius: 12px; padding: 26px; width: 400px; max-width: 92%; box-shadow: 0 20px 60px rgba(20,24,32,0.25); border: 1.5px solid var(--lsm-border); position: relative; z-index: 201; }
+.lsm-modal-title { font-size: 19px; color: var(--lsm-primary); margin-bottom: 4px; font-weight: 800; }
+.lsm-modal-sub { font-size: 12.5px; color: var(--lsm-text3); margin-bottom: 20px; }
+.lsm-modal-sub strong { color: var(--lsm-accent); font-weight: 700; }
+.lsm-field { margin-bottom: 14px; }
+.lsm-field label { font-size: 10.5px; font-weight: 700; color: var(--lsm-text2); letter-spacing: 0.4px; display: block; margin-bottom: 5px; text-transform: uppercase; }
+.lsm-field input, .lsm-field select { width: 100%; padding: 9px 12px; border: 1.5px solid var(--lsm-border2); border-radius: 7px; font-size: 13.5px; color: var(--lsm-text); outline: none; transition: border-color .18s, box-shadow .18s; background: var(--lsm-white); display: block; appearance: none; }
+.lsm-field input:focus, .lsm-field select:focus { border-color: var(--lsm-accent); box-shadow: 0 0 0 3px rgba(236,21,96,0.1); }
+.lsm-field input::placeholder { color: var(--lsm-text3); }
+.lsm-modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+.lsm-modal-splits { margin-bottom: 4px; }
+.lsm-modal-split-row { display: flex; gap: 8px; align-items: center; padding: 8px 10px; background: var(--lsm-bg); border-radius: 7px; margin-bottom: 6px; border: 1px solid var(--lsm-border); }
+.lsm-modal-split-row input { flex: 1; padding: 6px 8px; font-size: 13px; }
+.lsm-modal-split-row .lsm-split-label { font-size: 9.5px; font-weight: 700; color: var(--lsm-text3); text-transform: uppercase; min-width: 50px; flex-shrink: 0; }
+.lsm-remove-split-row { background: none; border: none; color: var(--lsm-text3); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; transition: color .15s; }
+.lsm-remove-split-row:hover { color: var(--lsm-accent); }
+.lsm-add-split-row-btn { display: flex; align-items: center; gap: 5px; background: transparent; color: var(--lsm-blue2); border: 1.5px dashed rgba(41,96,204,0.3); border-radius: 7px; padding: 7px 12px; font-size: 11px; font-weight: 700; cursor: pointer; width: 100%; justify-content: center; transition: all .15s; margin-bottom: 14px; }
+.lsm-add-split-row-btn:hover { border-color: var(--lsm-blue2); background: var(--lsm-blue3); }
+.lsm-split-mode-toggle { display: flex; gap: 6px; margin-bottom: 6px; }
+.lsm-split-mode-btn { flex: 1; padding: 7px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1.5px solid var(--lsm-border2); background: var(--lsm-bg); color: var(--lsm-text3); cursor: pointer; transition: all .15s; }
+.lsm-split-mode-btn.active { border-color: var(--lsm-accent); background: #fff0f4; color: var(--lsm-accent); }
+
+/* Hint */
+.lsm-hint { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: var(--lsm-primary); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; pointer-events: none; opacity: 0; transition: opacity .25s; z-index: 300; white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,0.28); border-left: 3px solid var(--lsm-accent); }
+.lsm-hint.lsm-show { opacity: 1; }
+
+/* Empty state */
+.lsm-empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+.lsm-empty-icon { width: 64px; height: 64px; background: var(--lsm-bg2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; border: 2px dashed var(--lsm-border2); }
+.lsm-empty-icon svg { width: 28px; height: 28px; display: block; }
+.lsm-empty-title { font-size: 18px; color: var(--lsm-text2); margin-bottom: 6px; font-weight: 800; }
+.lsm-empty-sub { font-size: 12.5px; color: var(--lsm-text3); max-width: 240px; }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#f7f8fa;">
+
+<div id="lsm-root">
+
+  <!-- TOOLBAR -->
+  <div id="lsm-toolbar">
+    <div class="lsm-brand">
+      <img id="lsm-logo-img" src="https://findmymortgage.com.au/wp-content/uploads/2025/09/FindMyMortgage-Site-Logo.png" style="height:auto;width:auto;max-height:36px;max-width:200px;object-fit:contain;border-radius:6px;display:block;flex-shrink:0;" onerror="this.style.display='none'">
+    </div>
+    <div class="lsm-client-input-wrap">
+      <span class="lsm-client-label">Client:</span>
+      <input type="text" class="lsm-client-input" id="lsm-client-name" placeholder="Enter client name…" oninput="lsmUpdateClientDisplay()">
+    </div>
+    <div class="lsm-toolbar-spacer"></div>
+    <button class="lsm-btn lsm-btn-accent" onclick="lsmOpenAddProperty()">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      Add Property
+    </button>
+    <button class="lsm-btn lsm-btn-ghost" id="lsm-link-mode-btn" onclick="lsmToggleLinkMode()">
+      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Link
+    </button>
+    <button class="lsm-btn lsm-btn-ghost" onclick="lsmPrint()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="14" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Print
+    </button>
+    <button class="lsm-btn lsm-btn-ghost" onclick="lsmDownload()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download
+    </button>
+  </div>
+
+  <!-- LINK MODE FLOATING PANEL -->
+  <div id="lsm-link-panel">
+    <span class="lsm-link-panel-text">Click properties to <strong>select for cross-security</strong></span>
+    <span class="lsm-link-panel-count" id="lsm-link-count">0 selected</span>
+    <button class="lsm-link-panel-done" onclick="lsmConfirmLinkGroup()">Link Selected ✓</button>
+    <button class="lsm-link-panel-cancel" onclick="lsmToggleLinkMode()">Cancel</button>
+  </div>
+
+  <!-- CANVAS -->
+  <div id="lsm-canvas-wrap">
+    <div id="lsm-canvas-bg"></div>
+    <div id="lsm-canvas">
+      <svg id="lsm-links-layer"></svg>
+      <div class="lsm-empty-state" id="lsm-empty-state">
+        <div class="lsm-empty-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21V12h6v9" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="lsm-empty-title">No properties yet</div>
+        <div class="lsm-empty-sub">Click "Add Property" to start mapping</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div id="lsm-summary-bar">
+    <div class="lsm-sum-item"><span class="lsm-sum-label">Properties</span><span class="lsm-sum-value lsm-accent" id="lsm-sum-props">0</span></div>
+    <div class="lsm-sum-item"><span class="lsm-sum-label">Total Security</span><span class="lsm-sum-value" id="lsm-sum-security">$0</span></div>
+    <div class="lsm-sum-item"><span class="lsm-sum-label">Total Loans</span><span class="lsm-sum-value" id="lsm-sum-loan">$0</span></div>
+    <div class="lsm-sum-item"><span class="lsm-sum-label">Portfolio LVR</span><span class="lsm-sum-value" id="lsm-sum-lvr">—</span></div>
+    <div class="lsm-sum-item" style="border-right:none"><span class="lsm-sum-label">Offset Accounts</span><span class="lsm-sum-value lsm-accent" id="lsm-sum-offsets">0</span></div>
+    <div class="lsm-sum-spacer"></div>
+    <div class="lsm-sum-client" id="lsm-sum-client-display" style="display:none">Prepared for <span id="lsm-sum-client-name"></span></div>
+  </div>
+
+  <!-- HINT -->
+  <div class="lsm-hint" id="lsm-hint"></div>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="lsm-overlay" id="lsm-add-modal" style="display:none">
+    <div class="lsm-modal">
+      <div class="lsm-modal-title" id="lsm-add-modal-title">Add Property</div>
+      <div class="lsm-modal-sub" id="lsm-add-modal-sub">Enter the property details to add it to the map</div>
+      <div class="lsm-field"><label>Address / Property Name</label><input type="text" id="lsm-prop-name" placeholder="e.g. 42 Riverside Drive, Sydney"></div>
+      <div class="lsm-field"><label>Property Type</label><select id="lsm-prop-type"><option value="oo">🏠 Owner Occupied</option><option value="inv">📈 Investment</option></select></div>
+      <div class="lsm-field"><label>Property Value ($)</label><input type="text" id="lsm-prop-value" placeholder="e.g. 850,000"></div>
+      <div class="lsm-field">
+        <label>Loan Structure</label>
+        <div class="lsm-split-mode-toggle">
+          <button class="lsm-split-mode-btn active" id="lsm-single-mode-btn" onclick="lsmSetLoanMode('single')">Single Loan</button>
+          <button class="lsm-split-mode-btn" id="lsm-split-mode-btn" onclick="lsmSetLoanMode('split')">Split / Multiple Loans</button>
+        </div>
+      </div>
+      <div id="lsm-single-loan-wrap" class="lsm-field"><label>Loan Amount ($)</label><input type="text" id="lsm-prop-loan" placeholder="e.g. 640,000"></div>
+      <div id="lsm-split-loan-wrap" style="display:none">
+        <div class="lsm-modal-splits" id="lsm-split-rows"></div>
+        <button class="lsm-add-split-row-btn" onclick="lsmAddSplitRow()">
+          <svg viewBox="0 0 24 24" width="11" height="11"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          Add another split
+        </button>
+      </div>
+      <div class="lsm-modal-actions">
+        <button class="lsm-btn lsm-btn-light" onclick="lsmCloseModal('lsm-add-modal')">Cancel</button>
+        <button class="lsm-btn lsm-btn-accent" id="lsm-add-modal-btn" onclick="lsmAddProperty()">Add Property</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFSET MODAL -->
+  <div class="lsm-overlay" id="lsm-offset-modal" style="display:none">
+    <div class="lsm-modal">
+      <div class="lsm-modal-title">Add Offset Account</div>
+      <div class="lsm-modal-sub" id="lsm-offset-modal-sub">Linking to property</div>
+      <div class="lsm-field"><label>Account Name or Number</label><input type="text" id="lsm-offset-name" placeholder="e.g. John's Offset or 123-456-789012"></div>
+      <div class="lsm-modal-actions">
+        <button class="lsm-btn lsm-btn-light" onclick="lsmCloseModal('lsm-offset-modal')">Cancel</button>
+        <button class="lsm-btn lsm-btn-accent" onclick="lsmAddOffset()">Add Offset Account</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── STATE ──
+  // lsmGroups: array of groups. Each group = { ids: Set<number>, primaryId: number|null }
+  // A property can only belong to one group.
+  var lsmProps = [];
+  var lsmGroups = [];           // cross-security groups
+  var lsmNextId = 1;
+  var lsmLinkMode = false;
+  var lsmLinkSelected = new Set(); // ids selected in current link session
+  var lsmCurrentOffsetPropId = null;
+  var lsmEditingPropId = null;
+  var lsmLoanMode = 'single';
+  var lsmSplitRowCount = 0;
+  var lsmLogoDataUrl = null;
+  var lsmLogoNaturalW = 0, lsmLogoNaturalH = 0;
+
+  /* ── LOGO ── */
+  (function(){
+    var img = new Image(); img.crossOrigin='anonymous';
+    img.onload=function(){ try{ lsmLogoNaturalW=img.naturalWidth;lsmLogoNaturalH=img.naturalHeight;var c=document.createElement('canvas');c.width=lsmLogoNaturalW;c.height=lsmLogoNaturalH;c.getContext('2d').drawImage(img,0,0);lsmLogoDataUrl=c.toDataURL('image/png');var t=document.getElementById('lsm-logo-img');if(t)t.src=lsmLogoDataUrl; }catch(e){} };
+    img.onerror=function(){ lsmLogoDataUrl=null; };
+    img.src='https://findmymortgage.com.au/wp-content/uploads/2025/09/FindMyMortgage-Site-Logo.png';
+  })();
+
+  /* ── UTILS ── */
+  function lsmFmt(n){ return '$'+Math.round(n).toLocaleString('en-AU'); }
+  function lsmParseMoney(s){ return parseFloat(String(s).replace(/[^0-9.]/g,''))||0; }
+  function lsmLvrColor(lvr){ return lvr>80?'#ec1560':lvr>60?'#d97706':'#12a36e'; }
+  function lsmShowHint(msg,dur){
+    dur=dur||2400;
+    var h=document.getElementById('lsm-hint');
+    h.textContent=msg; h.classList.add('lsm-show');
+    clearTimeout(h._t); h._t=setTimeout(function(){ h.classList.remove('lsm-show'); },dur);
+  }
+  function lsmTotalLoan(p){
+    if(p.splits&&p.splits.length>0) return p.splits.reduce(function(s,sp){return s+sp.amount;},0);
+    return p.loan||0;
+  }
+
+  /* ── GROUP HELPERS ── */
+  function lsmGetGroupOf(propId){
+    return lsmGroups.find(function(g){ return g.ids.has(propId); })||null;
+  }
+  function lsmGetGroupMembers(propId){
+    var g=lsmGetGroupOf(propId);
+    if(!g) return [];
+    return Array.from(g.ids);
+  }
+  function lsmIsInGroup(propId){ return !!lsmGetGroupOf(propId); }
+
+  /* ── CLIENT NAME ── */
+  window.lsmUpdateClientDisplay=function(){
+    var name=document.getElementById('lsm-client-name').value.trim();
+    var display=document.getElementById('lsm-sum-client-display');
+    var nameEl=document.getElementById('lsm-sum-client-name');
+    if(name){ nameEl.textContent=name; display.style.display='flex'; }
+    else { display.style.display='none'; }
+  };
+
+  /* ── LOAN MODE ── */
+  window.lsmSetLoanMode=function(mode,suppressAutoAdd){
+    lsmLoanMode=mode;
+    document.getElementById('lsm-single-mode-btn').classList.toggle('active',mode==='single');
+    document.getElementById('lsm-split-mode-btn').classList.toggle('active',mode==='split');
+    document.getElementById('lsm-single-loan-wrap').style.display=mode==='single'?'':'none';
+    document.getElementById('lsm-split-loan-wrap').style.display=mode==='split'?'':'none';
+    if(mode==='split'&&!suppressAutoAdd&&document.getElementById('lsm-split-rows').children.length===0){
+      lsmAddSplitRow(); lsmAddSplitRow();
+    }
+  };
+
+  window.lsmAddSplitRow=function(){
+    lsmSplitRowCount++;
+    var id=lsmSplitRowCount;
+    var wrap=document.getElementById('lsm-split-rows');
+    var existingCount=wrap.querySelectorAll('.lsm-modal-split-row').length;
+    var row=document.createElement('div');
+    row.className='lsm-modal-split-row'; row.id='lsm-split-row-'+id;
+    row.innerHTML='<span class="lsm-split-label">Split '+(existingCount+1)+'</span>'
+      +'<input type="text" placeholder="e.g. 320,000" style="flex:1;padding:6px 8px;font-size:13px;border:1.5px solid #e6e9ee;border-radius:6px;outline:none">'
+      +'<button class="lsm-remove-split-row" onclick="lsmRemoveSplitRow('+id+')" title="Remove">×</button>';
+    wrap.appendChild(row);
+    var inp=row.querySelector('input');
+    if(inp) lsmFormatMoneyInput(inp);
+  };
+
+  window.lsmRemoveSplitRow=function(id){
+    var row=document.getElementById('lsm-split-row-'+id);
+    if(row) row.remove();
+  };
+
+  function lsmGetSplitLoans(){
+    var rows=document.getElementById('lsm-split-rows').querySelectorAll('.lsm-modal-split-row');
+    var splits=[];
+    rows.forEach(function(row,i){
+      var input=row.querySelector('input');
+      var val=lsmParseMoney(input?input.value:'0');
+      var label=row.querySelector('.lsm-split-label');
+      splits.push({label:label?label.textContent:'Split '+(i+1),amount:val});
+    });
+    return splits.filter(function(s){return s.amount>0;});
+  }
+
+  /* ── MODALS ── */
+  window.lsmOpenAddProperty=function(){
+    lsmEditingPropId=null;
+    document.getElementById('lsm-add-modal-title').textContent='Add Property';
+    document.getElementById('lsm-add-modal-sub').textContent='Enter the property details to add it to the map';
+    document.getElementById('lsm-add-modal-btn').textContent='Add Property';
+    document.getElementById('lsm-add-modal-btn').onclick=lsmAddProperty;
+    document.getElementById('lsm-prop-name').value='';
+    document.getElementById('lsm-prop-value').value='';
+    document.getElementById('lsm-prop-loan').value='';
+    document.getElementById('lsm-prop-type').value='oo';
+    document.getElementById('lsm-split-rows').innerHTML='';
+    lsmSplitRowCount=0;
+    lsmSetLoanMode('single');
+    document.getElementById('lsm-add-modal').style.display='flex';
+    setTimeout(function(){ document.getElementById('lsm-prop-name').focus(); },60);
+  };
+
+  window.lsmOpenEditProperty=function(id){
+    var p=lsmProps.find(function(x){return x.id===id;});
+    lsmEditingPropId=id;
+    document.getElementById('lsm-add-modal-title').textContent='Edit Property';
+    document.getElementById('lsm-add-modal-sub').innerHTML='Updating <strong>'+p.name+'</strong>';
+    document.getElementById('lsm-add-modal-btn').textContent='Save Changes';
+    document.getElementById('lsm-add-modal-btn').onclick=lsmSaveEdit;
+    document.getElementById('lsm-prop-name').value=p.name;
+    document.getElementById('lsm-prop-value').value=p.value?Number(p.value).toLocaleString('en-AU'):'';
+    document.getElementById('lsm-prop-type').value=p.type||'oo';
+    document.getElementById('lsm-split-rows').innerHTML='';
+    lsmSplitRowCount=0;
+    if(p.splits&&p.splits.length>0){
+      lsmSetLoanMode('split',true);
+      p.splits.forEach(function(sp){
+        lsmSplitRowCount++;
+        var sid=lsmSplitRowCount;
+        var wrap=document.getElementById('lsm-split-rows');
+        var row=document.createElement('div');
+        row.className='lsm-modal-split-row'; row.id='lsm-split-row-'+sid;
+        var fmtAmount=sp.amount?Number(sp.amount).toLocaleString('en-AU'):'';
+        row.innerHTML='<span class="lsm-split-label">'+sp.label+'</span>'
+          +'<input type="text" value="'+fmtAmount+'" style="flex:1;padding:6px 8px;font-size:13px;border:1.5px solid #e6e9ee;border-radius:6px;outline:none">'
+          +'<button class="lsm-remove-split-row" onclick="lsmRemoveSplitRow('+sid+')" title="Remove">×</button>';
+        wrap.appendChild(row);
+        var newInp=row.querySelector('input');
+        if(newInp) lsmFormatMoneyInput(newInp);
+      });
+    } else {
+      lsmSetLoanMode('single');
+      document.getElementById('lsm-prop-loan').value=p.loan?Number(p.loan).toLocaleString('en-AU'):'';
+    }
+    document.getElementById('lsm-add-modal').style.display='flex';
+    setTimeout(function(){ document.getElementById('lsm-prop-name').focus(); },60);
+  };
+
+  window.lsmSaveEdit=function(){
+    var p=lsmProps.find(function(x){return x.id===lsmEditingPropId;});
+    if(!p) return;
+    p.name=document.getElementById('lsm-prop-name').value.trim()||p.name;
+    p.value=lsmParseMoney(document.getElementById('lsm-prop-value').value)||p.value;
+    p.type=document.getElementById('lsm-prop-type').value;
+    if(lsmLoanMode==='split'){
+      var splits=lsmGetSplitLoans();
+      if(splits.length>0){ p.splits=splits; p.loan=0; }
+    } else {
+      p.loan=lsmParseMoney(document.getElementById('lsm-prop-loan').value)||p.loan;
+      p.splits=[];
+    }
+    lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
+    lsmCloseModal('lsm-add-modal');
+    lsmShowHint('Property updated ✓');
+  };
+
+  window.lsmCloseModal=function(id){ document.getElementById(id).style.display='none'; };
+
+  ['lsm-add-modal','lsm-offset-modal'].forEach(function(id){
+    document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) lsmCloseModal(id); });
+  });
+
+  document.getElementById('lsm-root').addEventListener('keydown',function(e){
+    if(e.key==='Escape'){ lsmCloseModal('lsm-add-modal'); lsmCloseModal('lsm-offset-modal'); if(lsmLinkMode) lsmToggleLinkMode(); }
+  });
+
+  /* ── ADD PROPERTY ── */
+  window.lsmAddProperty=function(){
+    var name=document.getElementById('lsm-prop-name').value.trim()||'Property '+lsmNextId;
+    var value=lsmParseMoney(document.getElementById('lsm-prop-value').value);
+    var type=document.getElementById('lsm-prop-type').value;
+    var wrap=document.getElementById('lsm-canvas-wrap');
+    var cx=wrap.scrollLeft+60+Math.random()*180;
+    var cy=wrap.scrollTop+60+Math.random()*140;
+    var p;
+    if(lsmLoanMode==='split'){
+      var splits=lsmGetSplitLoans();
+      p={id:lsmNextId++,name:name,value:value,loan:0,splits:splits,type:type,x:cx,y:cy,offsets:[]};
+    } else {
+      var loan=lsmParseMoney(document.getElementById('lsm-prop-loan').value);
+      p={id:lsmNextId++,name:name,value:value,loan:loan,splits:[],type:type,x:cx,y:cy,offsets:[]};
+    }
+    lsmProps.push(p);
+    lsmRenderCard(p);
+    lsmUpdateLinks(); lsmUpdateSummary();
+    document.getElementById('lsm-empty-state').style.display='none';
+    lsmCloseModal('lsm-add-modal');
+    lsmShowHint('Property added — drag by the header to reposition');
+  };
+
+  /* ── TOGGLE TYPE ── */
+  window.lsmToggleType=function(id){
+    var p=lsmProps.find(function(x){return x.id===id;});
+    if(!p) return;
+    p.type=p.type==='inv'?'oo':'inv';
+    lsmRerenderAll(); lsmUpdateLinks();
+    lsmShowHint(p.type==='oo'?'Marked as Owner Occupied':'Marked as Investment');
+  };
+
+  /* ── TOGGLE PRIMARY SECURITY ──
+   * Only visible/active when the card is in a group.
+   * Turning ON: clears any other primary in same group, sets this one.
+   * Turning OFF: clears primary for whole group → all spokes disappear (links remain but undirected).
+   * Actually per spec: "If i unselect primary, all spokes are removed and all properties unlink."
+   * So toggling off primary = dissolve the group entirely.
+   */
+  window.lsmTogglePrimary=function(id){
+    var p=lsmProps.find(function(x){return x.id===id;});
+    if(!p) return;
+    var group=lsmGetGroupOf(id);
+    if(!group) return; // not in a group; badge should be hidden
+
+    if(group.primaryId===id){
+      // Turning OFF primary → dissolve entire group
+      lsmDissolveGroup(group);
+      lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
+      lsmShowHint('Primary removed — group unlinked. Re-link properties to reconnect.');
+    } else {
+      // Turning ON primary for this card
+      group.primaryId=id;
+      lsmRerenderAll(); lsmUpdateLinks();
+      lsmShowHint('★ '+p.name+' set as Primary Security');
+    }
+  };
+
+  function lsmDissolveGroup(group){
+    lsmGroups=lsmGroups.filter(function(g){return g!==group;});
+  }
+
+  /* ── UNLINK ONE PROPERTY FROM ITS GROUP ──
+   * Removes the property from the group. If group has <2 members left → dissolve.
+   */
+  window.lsmUnlinkFromGroup=function(propId){
+    var group=lsmGetGroupOf(propId);
+    if(!group) return;
+    group.ids.delete(propId);
+    // If primary was this card, clear primary
+    if(group.primaryId===propId) group.primaryId=null;
+    // If less than 2 remain, dissolve
+    if(group.ids.size<2) lsmDissolveGroup(group);
+    lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
+    lsmShowHint('Property removed from cross-security group ✓');
+  };
+
+  /* ── LINK MODE ──
+   * 1. User clicks "Link" → enter link mode
+   * 2. User clicks cards to select (toggle)
+   * 3. User clicks "Link Selected" → confirm
+   * 4. If any selected card is already in a group → merge all into that group
+   *    Otherwise → create new group
+   * 5. Primary badge appears on all cards in group; user picks one
+   */
+  window.lsmToggleLinkMode=function(){
+    lsmLinkMode=!lsmLinkMode;
+    lsmLinkSelected.clear();
+    var btn=document.getElementById('lsm-link-mode-btn');
+    var panel=document.getElementById('lsm-link-panel');
+    var canvas=document.getElementById('lsm-canvas-wrap');
+
+    if(lsmLinkMode){
+      btn.classList.add('lsm-active');
+      panel.classList.add('lsm-show');
+      canvas.classList.add('lsm-link-mode');
+      lsmUpdateLinkPanel();
+      lsmShowHint('Click each property to include in the cross-security group',4000);
+    } else {
+      btn.classList.remove('lsm-active');
+      panel.classList.remove('lsm-show');
+      canvas.classList.remove('lsm-link-mode');
+      // Clear selection highlights
+      lsmProps.forEach(function(p){
+        var el=document.getElementById('lsm-prop-'+p.id);
+        if(el) el.classList.remove('lsm-selected');
+      });
+    }
+  };
+
+  function lsmUpdateLinkPanel(){
+    var count=lsmLinkSelected.size;
+    document.getElementById('lsm-link-count').textContent=count+' selected';
+  }
+
+  /* Called when a card is clicked in link mode */
+  function lsmHandleLinkClick(id){
+    if(!lsmLinkMode) return;
+    var el=document.getElementById('lsm-prop-'+id);
+    if(!el) return;
+    if(lsmLinkSelected.has(id)){
+      lsmLinkSelected.delete(id);
+      el.classList.remove('lsm-selected');
+    } else {
+      lsmLinkSelected.add(id);
+      el.classList.add('lsm-selected');
+    }
+    lsmUpdateLinkPanel();
+  }
+
+  window.lsmConfirmLinkGroup=function(){
+    if(lsmLinkSelected.size<2){
+      lsmShowHint('Select at least 2 properties to link');
+      return;
+    }
+    // Collect all selected ids
+    var selectedIds=Array.from(lsmLinkSelected);
+
+    // Find any existing groups that contain these ids
+    var affectedGroups=[];
+    selectedIds.forEach(function(id){
+      var g=lsmGetGroupOf(id);
+      if(g&&affectedGroups.indexOf(g)===-1) affectedGroups.push(g);
+    });
+
+    if(affectedGroups.length===0){
+      // New group
+      lsmGroups.push({ids:new Set(selectedIds),primaryId:null});
+    } else if(affectedGroups.length===1){
+      // Merge selected into existing group
+      selectedIds.forEach(function(id){ affectedGroups[0].ids.add(id); });
+    } else {
+      // Merge multiple groups + selected into one
+      var masterGroup=affectedGroups[0];
+      // Take primaryId from first group that has one
+      var existingPrimary=null;
+      affectedGroups.forEach(function(g){if(g.primaryId&&!existingPrimary) existingPrimary=g.primaryId;});
+      affectedGroups.slice(1).forEach(function(g){
+        g.ids.forEach(function(id){ masterGroup.ids.add(id); });
+        lsmGroups=lsmGroups.filter(function(x){return x!==g;});
+      });
+      selectedIds.forEach(function(id){ masterGroup.ids.add(id); });
+      if(existingPrimary) masterGroup.primaryId=existingPrimary;
+    }
+
+    lsmToggleLinkMode(); // exit link mode, clear highlights
+    lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
+    lsmShowHint('Properties linked ✓ — click ★ Set Primary on the main security card',3500);
+  };
+
+  /* ── SVG ICON HELPERS ── */
+  function svgIcon(viewBox,w,h,paths){ return '<svg viewBox="'+viewBox+'" width="'+w+'" height="'+h+'" style="display:block;overflow:visible">'+paths+'</svg>'; }
+  function svgPath(d,color){ return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
+  function svgPoly(pts,color){ return '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
+  function svgRect(attrs,color){ return '<rect '+attrs+' fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
+  function svgLine(attrs,color){ return '<line '+attrs+' fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
+
+  var ICO_OFFSET=svgIcon('0 0 24 24',11,11,svgRect('x="1" y="4" width="22" height="16" rx="3"','#ec1560')+svgLine('x1="1" y1="10" x2="23" y2="10"','#ec1560'));
+  var ICO_EDIT=svgIcon('0 0 24 24',11,11,svgPath('M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7','#ec1560')+svgPath('M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z','#ec1560'));
+  var ICO_TRASH=svgIcon('0 0 24 24',11,11,svgPoly('3 6 5 6 21 6','#ec1560')+svgPath('M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6','#ec1560')+svgPath('M10 11v6M14 11v6','#ec1560'));
+  var ICO_LINK=svgIcon('0 0 24 24',10,10,svgPath('M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71','#2960cc')+svgPath('M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.7','#2960cc'));
+  var ICO_UNLINK=svgIcon('0 0 24 24',10,10,svgPath('M18.36 5.64a9 9 0 010 12.73M5.64 18.36a9 9 0 010-12.73M3 3l18 18','#ec1560'));
+  var ICO_SPLIT_LOAN=svgIcon('0 0 24 24',11,11,svgRect('x="2" y="7" width="20" height="14" rx="2"','#ec1560')+svgPath('M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16','#ec1560'));
+  var ICO_OFFSET_CHIP=svgIcon('0 0 24 24',11,11,svgRect('x="1" y="4" width="22" height="16" rx="3"','#12a36e')+svgLine('x1="1" y1="10" x2="23" y2="10"','#12a36e'));
+  var ICO_OO=svgIcon('0 0 24 24',9,9,svgPath('M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z','#4de8ac')+svgPath('M9 21V12h6v9','#4de8ac'));
+  var ICO_INV=svgIcon('0 0 24 24',9,9,svgPoly('22 7 13.5 15.5 8.5 10.5 2 17','#7fb3ff')+svgPoly('16 7 22 7 22 13','#7fb3ff'));
+  var ICO_PENCIL_SM=svgIcon('0 0 24 24',8,8,svgPath('M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7','#ec1560')+svgPath('M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z','#ec1560'));
+  var ICO_STAR_ON=svgIcon('0 0 24 24',9,9,'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="#fbbf24" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>');
+  var ICO_STAR_OFF=svgIcon('0 0 24 24',9,9,'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>');
+  var ICO_STAR_INFO=svgIcon('0 0 24 24',10,10,'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(217,119,6,0.3)" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>');
+
+  /* ── RENDER CARD ── */
+  function lsmRenderCard(p){
+    var totalLoan=lsmTotalLoan(p);
+    var group=lsmGetGroupOf(p.id);
+    var isCross=!!(group&&group.ids.size>1);
+    var isPrimary=!!(group&&group.primaryId===p.id);
+    var hasPrimarySet=!!(group&&group.primaryId);
+
+    var indivLvr=p.value>0?Math.round(totalLoan/p.value*100):0;
+    var indivColor=lsmLvrColor(indivLvr);
+
+    var groupSec=0, groupLoan=0;
+    if(group){
+      group.ids.forEach(function(id){
+        var pp=lsmProps.find(function(x){return x.id===id;});
+        if(pp){ groupSec+=pp.value; groupLoan+=lsmTotalLoan(pp); }
+      });
+    }
+    var groupLvr=groupSec>0?Math.round(groupLoan/groupSec*100):0;
+    var groupColor=lsmLvrColor(groupLvr);
+
+    var propType=p.type||'oo';
+    var typeBadge=propType==='oo'
+      ?'<span class="lsm-prop-type-badge oo" onclick="lsmToggleType('+p.id+')" title="Click to toggle">'+ICO_OO+'Owner Occupied</span>'
+      :'<span class="lsm-prop-type-badge inv" onclick="lsmToggleType('+p.id+')" title="Click to toggle">'+ICO_INV+'Investment</span>';
+
+    // Primary badge — only show when in a group
+    var primaryBadge='';
+    if(isCross){
+      if(isPrimary){
+        primaryBadge='<span class="lsm-primary-badge is-primary" onclick="lsmTogglePrimary('+p.id+')" title="Click to remove primary (will unlink group)">'+ICO_STAR_ON+'Primary Security</span>';
+      } else {
+        primaryBadge='<span class="lsm-primary-badge not-primary" onclick="lsmTogglePrimary('+p.id+')" title="Set as primary security">'+ICO_STAR_OFF+' Set Primary</span>';
+      }
+    }
+
+    // Cross badge — always show CROSS SECURED when in a group (regardless of primary)
+    var crossBadge=isCross
+      ?'<div class="lsm-cross-badge">'+ICO_LINK+'Cross Secured</div>'
+      :'';
+
+    // Primary info banner on body (only on the primary card, only when primary has been set)
+    var primaryInfo=(isCross&&isPrimary)
+      ?'<div class="lsm-primary-info">'+ICO_STAR_INFO+'Primary Security — spokes point to this property</div>'
+      :'';
+
+    // "Remove from group" button on non-primary linked cards
+    var unlinkHTML=isCross&&!isPrimary
+      ?'<button class="lsm-unlink-btn" onclick="lsmUnlinkFromGroup('+p.id+')">'+ICO_UNLINK+'Remove from cross-security group</button>'
+      :'';
+
+    var groupRowHTML=isCross
+      ?'<div class="lsm-stat-row">'
+          +'<div class="lsm-stat-box lsm-group"><div class="lsm-stat-label">Group Security</div><div class="lsm-stat-value">'+lsmFmt(groupSec)+'</div></div>'
+          +'<div class="lsm-stat-box lsm-group"><div class="lsm-stat-label">Group Loan</div><div class="lsm-stat-value">'+lsmFmt(groupLoan)+'</div></div>'
+          +'</div>'
+          +'<div class="lsm-joint-lvr">'
+            +'<div class="lsm-joint-lvr-header"><span class="lsm-joint-lvr-title">Joint LVR Position</span><span class="lsm-joint-lvr-val" style="color:'+groupColor+'">'+groupLvr+'%</span></div>'
+            +'<div class="lsm-joint-lvr-bar-wrap"><div class="lsm-joint-lvr-bar" style="width:'+Math.min(groupLvr,100)+'%;background:'+groupColor+'"></div></div>'
+          +'</div>'
+      :'';
+
+    var loanHTML='';
+    if(p.splits&&p.splits.length>0){
+      loanHTML='<div class="lsm-splits-wrap">'
+        +'<div class="lsm-splits-head"><span class="lsm-splits-title">Split Loans</span>'
+        +'<button class="lsm-add-split-btn" onclick="lsmOpenEditProperty('+p.id+')">'+ICO_PENCIL_SM+'Edit</button></div>';
+      p.splits.forEach(function(sp){
+        loanHTML+='<div class="lsm-split-chip">'
+          +'<span class="lsm-split-chip-icon">'+ICO_SPLIT_LOAN+'</span>'
+          +'<span class="lsm-split-chip-label">'+sp.label+'</span>'
+          +'<span class="lsm-split-chip-amount">'+lsmFmt(sp.amount)+'</span>'
+          +'</div>';
+      });
+      loanHTML+='</div>';
+      loanHTML+='<div class="lsm-stat-row">'
+        +'<div class="lsm-stat-box"><div class="lsm-stat-label">Property Value</div><div class="lsm-stat-value">'+lsmFmt(p.value)+'</div></div>'
+        +'<div class="lsm-stat-box"><div class="lsm-stat-label">Total Loans</div><div class="lsm-stat-value">'+lsmFmt(totalLoan)+'</div></div>'
+        +'</div>';
+    } else {
+      loanHTML='<div class="lsm-stat-row">'
+        +'<div class="lsm-stat-box"><div class="lsm-stat-label">Property Value</div><div class="lsm-stat-value">'+lsmFmt(p.value)+'</div></div>'
+        +'<div class="lsm-stat-box"><div class="lsm-stat-label">Loan Amount</div><div class="lsm-stat-value">'+lsmFmt(p.loan)+'</div></div>'
+        +'</div>';
+    }
+
+    var offsetsHTML=p.offsets.length>0
+      ?'<div class="lsm-offsets-wrap">'
+          +'<div class="lsm-offsets-head"><span>Offset Accounts</span><span class="lsm-offsets-count">'+p.offsets.length+'</span></div>'
+          +p.offsets.map(function(o,i){
+            return '<div class="lsm-offset-chip">'
+              +'<span class="lsm-offset-chip-icon">'+ICO_OFFSET_CHIP+'</span>'
+              +'<span class="lsm-offset-chip-name" title="'+o+'">'+o+'</span>'
+              +'<button class="lsm-offset-remove" onclick="lsmRemoveOffset('+p.id+','+i+')">×</button>'
+              +'</div>';
+          }).join('')
+          +'</div>'
+      :'';
+
+    var el=document.getElementById('lsm-prop-'+p.id);
+    if(!el){
+      el=document.createElement('div');
+      el.id='lsm-prop-'+p.id;
+      el.className='lsm-prop-card';
+      el.style.left=p.x+'px'; el.style.top=p.y+'px';
+      document.getElementById('lsm-canvas').appendChild(el);
+      lsmMakeDraggable(el,p);
+    }
+
+    el.classList.toggle('lsm-is-primary',isPrimary);
+
+    el.innerHTML=
+      '<div class="lsm-card-header">'
+        +'<div class="lsm-card-meta">'
+          +'<div class="lsm-card-eyebrow">Property '+p.id+'</div>'
+          +'<div class="lsm-card-name" title="'+p.name+'">'+p.name+'</div>'
+          +'<div class="lsm-prop-type-row">'+typeBadge+primaryBadge+'</div>'
+        +'</div>'
+        +'<div class="lsm-card-actions">'
+          +'<button class="lsm-icon-btn" title="Add offset" onclick="lsmOpenOffsetModal('+p.id+')">'+ICO_OFFSET+'</button>'
+          +'<button class="lsm-icon-btn" title="Edit" onclick="lsmOpenEditProperty('+p.id+')">'+ICO_EDIT+'</button>'
+          +'<button class="lsm-icon-btn lsm-danger" title="Delete" onclick="lsmDeleteProperty('+p.id+')">'+ICO_TRASH+'</button>'
+        +'</div>'
+      +'</div>'
+      +'<div class="lsm-card-body">'
+        +crossBadge
+        +primaryInfo
+        +unlinkHTML
+        +'<div class="lsm-indiv-lvr">'
+          +'<span class="lsm-indiv-lvr-label">LVR</span>'
+          +'<div class="lsm-indiv-lvr-bar-wrap"><div class="lsm-indiv-lvr-bar" style="width:'+Math.min(indivLvr,100)+'%;background:'+indivColor+'"></div></div>'
+          +'<span class="lsm-indiv-lvr-val" style="color:'+indivColor+'">'+indivLvr+'%</span>'
+        +'</div>'
+        +loanHTML
+        +groupRowHTML
+      +'</div>'
+      +offsetsHTML;
+
+    // Link mode card click
+    el.addEventListener('click',function(e){
+      if(!lsmLinkMode) return;
+      if(e.target.closest('.lsm-icon-btn')||e.target.closest('.lsm-offset-remove')||e.target.closest('.lsm-unlink-btn')) return;
+      lsmHandleLinkClick(p.id);
+    });
+  }
+  window.lsmRenderCard=lsmRenderCard;
+
+  /* ── DRAG ── */
+  function lsmMakeDraggable(el,p){
+    var sX,sY,sL,sT,dragging=false;
+    el.addEventListener('mousedown',function(e){
+      if(!e.target.closest('.lsm-card-header')) return;
+      if(e.target.closest('.lsm-icon-btn')||e.target.closest('.lsm-prop-type-badge')||e.target.closest('.lsm-primary-badge')) return;
+      if(lsmLinkMode) return;
+      dragging=true; sX=e.clientX; sY=e.clientY; sL=p.x; sT=p.y;
+      el.classList.add('lsm-dragging'); e.preventDefault();
+    });
+    document.addEventListener('mousemove',function(e){
+      if(!dragging) return;
+      p.x=Math.max(0,sL+(e.clientX-sX)); p.y=Math.max(0,sT+(e.clientY-sY));
+      el.style.left=p.x+'px'; el.style.top=p.y+'px';
+      lsmUpdateLinks();
+    });
+    document.addEventListener('mouseup',function(){
+      if(dragging){ dragging=false; el.classList.remove('lsm-dragging'); }
+    });
+    el.addEventListener('touchstart',function(e){
+      if(!e.target.closest('.lsm-card-header')||lsmLinkMode) return;
+      dragging=true; sX=e.touches[0].clientX; sY=e.touches[0].clientY; sL=p.x; sT=p.y;
+      el.classList.add('lsm-dragging');
+    },{passive:true});
+    document.addEventListener('touchmove',function(e){
+      if(!dragging) return;
+      p.x=Math.max(0,sL+(e.touches[0].clientX-sX)); p.y=Math.max(0,sT+(e.touches[0].clientY-sY));
+      el.style.left=p.x+'px'; el.style.top=p.y+'px';
+      lsmUpdateLinks();
+    },{passive:true});
+    document.addEventListener('touchend',function(){
+      if(dragging){ dragging=false; el.classList.remove('lsm-dragging'); }
+    });
+  }
+
+  /* ── LINK LINES ──
+   * Rules:
+   * - Only draw lines when a group has a primaryId set
+   * - Draw one spoke from each non-primary member to the primary
+   * - All spokes are BLUE, all labelled "CROSS SECURED"
+   * - Arrow points TO the primary
+   * - No primary set → no lines drawn at all
+   */
+  function lsmUpdateLinks(){
+    var svg=document.getElementById('lsm-links-layer');
+    svg.innerHTML='';
+    var canvas=document.getElementById('lsm-canvas');
+    var maxX=lsmProps.reduce(function(m,p){return Math.max(m,p.x+320);},900);
+    var maxY=lsmProps.reduce(function(m,p){return Math.max(m,p.y+450);},600);
+    canvas.style.minWidth=maxX+'px'; canvas.style.minHeight=maxY+'px';
+    var ns='http://www.w3.org/2000/svg';
+
+    lsmGroups.forEach(function(group){
+      if(!group.primaryId) return; // no primary = no spokes
+      var primaryProp=lsmProps.find(function(p){return p.id===group.primaryId;});
+      if(!primaryProp) return;
+
+      var lineColor='#2960cc';
+      var glowColor='rgba(41,96,204,0.15)';
+      var labelColor='#7fb3ff';
+      var labelBorder='#2960cc';
+      var labelText='CROSS SECURED';
+      var labelWidth=112;
+
+      group.ids.forEach(function(id){
+        if(id===group.primaryId) return; // no self-spoke
+        var spokeProp=lsmProps.find(function(p){return p.id===id;});
+        if(!spokeProp) return;
+
+        // spoke: from non-primary → primary
+        var x1=spokeProp.x+144, y1=spokeProp.y+70;
+        var x2=primaryProp.x+144, y2=primaryProp.y+70;
+        var mx=(x1+x2)/2, my=(y1+y2)/2;
+
+        // Glow
+        var glow=document.createElementNS(ns,'path');
+        glow.setAttribute('d','M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2);
+        glow.setAttribute('stroke',glowColor); glow.setAttribute('stroke-width','8'); glow.setAttribute('fill','none');
+        svg.appendChild(glow);
+
+        // Main bezier
+        var path=document.createElementNS(ns,'path');
+        path.setAttribute('d','M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2);
+        path.setAttribute('stroke',lineColor); path.setAttribute('stroke-width','2'); path.setAttribute('fill','none');
+        svg.appendChild(path);
+
+        // Arrowhead at primary (x2,y2)
+        var dx=x2-mx, dy=y2-my;
+        var len=Math.sqrt(dx*dx+dy*dy)||1; dx/=len; dy/=len;
+        var arrowSize=9;
+        var ax=x2-dx*arrowSize, ay=y2-dy*arrowSize;
+        var arrow=document.createElementNS(ns,'polygon');
+        arrow.setAttribute('points',x2+','+y2+' '+(ax+dy*arrowSize*0.5)+','+(ay-dx*arrowSize*0.5)+' '+(ax-dy*arrowSize*0.5)+','+(ay+dx*arrowSize*0.5));
+        arrow.setAttribute('fill',lineColor);
+        svg.appendChild(arrow);
+
+        // Label pill
+        var bg=document.createElementNS(ns,'rect');
+        bg.setAttribute('x',mx-(labelWidth/2)); bg.setAttribute('y',my-11);
+        bg.setAttribute('width',labelWidth); bg.setAttribute('height',22);
+        bg.setAttribute('rx',11); bg.setAttribute('fill','#141820');
+        bg.setAttribute('stroke',labelBorder); bg.setAttribute('stroke-width','1.2');
+        svg.appendChild(bg);
+
+        var t=document.createElementNS(ns,'text');
+        t.setAttribute('x',mx); t.setAttribute('y',my+4.5);
+        t.setAttribute('text-anchor','middle'); t.setAttribute('fill',labelColor);
+        t.setAttribute('font-family','Figtree,sans-serif'); t.setAttribute('font-size','9');
+        t.setAttribute('font-weight','700'); t.setAttribute('letter-spacing','0.8');
+        t.textContent=labelText;
+        svg.appendChild(t);
+      });
+    });
+  }
+
+  /* ── OFFSETS ── */
+  window.lsmOpenOffsetModal=function(id){
+    lsmCurrentOffsetPropId=id;
+    var p=lsmProps.find(function(x){return x.id===id;});
+    document.getElementById('lsm-offset-modal-sub').innerHTML='Linking offset to <strong>'+p.name+'</strong>';
+    document.getElementById('lsm-offset-name').value='';
+    document.getElementById('lsm-offset-modal').style.display='flex';
+    setTimeout(function(){ document.getElementById('lsm-offset-name').focus(); },60);
+  };
+
+  window.lsmAddOffset=function(){
+    var name=document.getElementById('lsm-offset-name').value.trim();
+    if(!name||!lsmCurrentOffsetPropId) return;
+    var p=lsmProps.find(function(x){return x.id===lsmCurrentOffsetPropId;});
+    if(p){ p.offsets.push(name); lsmRenderCard(p); lsmUpdateSummary(); }
+    lsmCloseModal('lsm-offset-modal');
+    lsmShowHint('Offset account linked ✓');
+  };
+
+  window.lsmRemoveOffset=function(propId,idx){
+    var p=lsmProps.find(function(x){return x.id===propId;});
+    if(p){ p.offsets.splice(idx,1); lsmRenderCard(p); lsmUpdateSummary(); }
+  };
+
+  /* ── DELETE ── */
+  window.lsmDeleteProperty=function(id){
+    if(!confirm('Remove this property from the map?')) return;
+    // Remove from group if any
+    var group=lsmGetGroupOf(id);
+    if(group){
+      group.ids.delete(id);
+      if(group.primaryId===id) group.primaryId=null;
+      if(group.ids.size<2) lsmDissolveGroup(group);
+    }
+    lsmProps=lsmProps.filter(function(p){return p.id!==id;});
+    var el=document.getElementById('lsm-prop-'+id);
+    if(el){ el.style.transform='scale(0)'; el.style.opacity='0'; el.style.transition='all .2s'; setTimeout(function(){el.remove();},200); }
+    lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
+    if(lsmProps.length===0) document.getElementById('lsm-empty-state').style.display='';
+    lsmShowHint('Property removed');
+  };
+
+  function lsmRerenderAll(){ lsmProps.forEach(function(p){ lsmRenderCard(p); }); }
+
+  /* ── SUMMARY ── */
+  function lsmUpdateSummary(){
+    var tSec=lsmProps.reduce(function(s,p){return s+p.value;},0);
+    var tLoan=lsmProps.reduce(function(s,p){return s+lsmTotalLoan(p);},0);
+    var lvr=tSec>0?Math.round(tLoan/tSec*100):0;
+    var tOff=lsmProps.reduce(function(s,p){return s+p.offsets.length;},0);
+    document.getElementById('lsm-sum-props').textContent=lsmProps.length;
+    document.getElementById('lsm-sum-security').textContent=lsmFmt(tSec);
+    document.getElementById('lsm-sum-loan').textContent=lsmFmt(tLoan);
+    document.getElementById('lsm-sum-lvr').textContent=lsmProps.length?lvr+'%':'—';
+    document.getElementById('lsm-sum-offsets').textContent=tOff;
+  }
+
+  /* ── PRINT ── */
+  window.lsmPrint=function(){
+    if(lsmProps.length===0){ lsmShowHint('Add some properties first!'); return; }
+    window.print();
+  };
+
+  /* ── DOWNLOAD ── */
+  window.lsmDownload=function(){
+    if(lsmProps.length===0){ lsmShowHint('Add some properties first!'); return; }
+    var SCALE=2,PAD=60,TOOLBAR=72,FOOTER=52,CARD_W=288;
+    var maxX=0,maxY=0;
+    lsmProps.forEach(function(p){
+      var totalLoan=lsmTotalLoan(p);
+      var splitH=(p.splits&&p.splits.length>0)?p.splits.length*30+14:0;
+      var oH=p.offsets.length>0?(32+p.offsets.length*34):0;
+      var group=lsmGetGroupOf(p.id);
+      var gH=(group&&group.ids.size>1)?100:0;
+      var cH=80+13+38+52+splitH+gH+oH+24;
+      maxX=Math.max(maxX,p.x+CARD_W+PAD);
+      maxY=Math.max(maxY,p.y+cH+PAD);
+    });
+    var W=Math.max(maxX,960)*SCALE;
+    var H=(maxY+TOOLBAR+FOOTER)*SCALE;
+    var cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+    var ctx=cv.getContext('2d'); ctx.scale(SCALE,SCALE);
+    var TW=W/SCALE,TH=H/SCALE;
+
+    ctx.fillStyle='#f7f8fa'; ctx.fillRect(0,0,TW,TH);
+    ctx.fillStyle='rgba(180,185,210,0.35)';
+    for(var gx=0;gx<TW;gx+=40) for(var gy=TOOLBAR;gy<TH-FOOTER;gy+=40){ctx.beginPath();ctx.arc(gx,gy,1,0,Math.PI*2);ctx.fill();}
+
+    ctx.fillStyle='#141820'; ctx.fillRect(0,0,TW,TOOLBAR);
+    ctx.fillStyle='#ec1560'; ctx.fillRect(0,TOOLBAR-2,TW,2);
+
+    if(lsmLogoDataUrl){
+      var logoImg=new Image(); logoImg.src=lsmLogoDataUrl;
+      var srcW=lsmLogoNaturalW||200,srcH=lsmLogoNaturalH||60;
+      var logoH=36,logoW=Math.round(srcW*(logoH/srcH));
+      if(!logoW||logoW>220) logoW=160;
+      var logoY=Math.round((TOOLBAR-2-logoH)/2);
+      ctx.drawImage(logoImg,18,logoY,logoW,logoH);
+    } else {
+      ctx.font='800 17px Figtree,sans-serif'; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText('Find My Mortgage',24,34);
+    }
+    var clientName=document.getElementById('lsm-client-name').value.trim();
+    if(clientName){
+      ctx.font='400 10px Figtree,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.textAlign='center'; ctx.fillText('Prepared for',TW/2,28);
+      ctx.font='700 13px Figtree,sans-serif'; ctx.fillStyle='#fff'; ctx.fillText(clientName,TW/2,46);
+    }
+    ctx.font='400 10px Figtree,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.textAlign='right';
+    ctx.fillText('Generated: '+new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'}),TW-24,40);
+
+    ctx.save(); ctx.translate(0,TOOLBAR);
+
+    // Draw spokes (only when primary is set)
+    lsmGroups.forEach(function(group){
+      if(!group.primaryId) return;
+      var primaryProp=lsmProps.find(function(p){return p.id===group.primaryId;});
+      if(!primaryProp) return;
+      var lineColor='#2960cc',glowColor='rgba(41,96,204,0.18)',labelColor='#7fb3ff',labelBorder='#2960cc';
+      var labelText='CROSS SECURED',labelW=112;
+
+      group.ids.forEach(function(id){
+        if(id===group.primaryId) return;
+        var spokeProp=lsmProps.find(function(p){return p.id===id;});
+        if(!spokeProp) return;
+        var x1=spokeProp.x+144,y1=spokeProp.y+70,x2=primaryProp.x+144,y2=primaryProp.y+70;
+        var mx=(x1+x2)/2,my=(y1+y2)/2;
+
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo(mx,y1,mx,y2,x2,y2);
+        ctx.strokeStyle=glowColor;ctx.lineWidth=8;ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo(mx,y1,mx,y2,x2,y2);
+        ctx.strokeStyle=lineColor;ctx.lineWidth=2;ctx.setLineDash([]);ctx.stroke();
+
+        var dx=x2-mx,dy=y2-my,len=Math.sqrt(dx*dx+dy*dy)||1;dx/=len;dy/=len;
+        var arrowSize=9;var ax=x2-dx*arrowSize,ay=y2-dy*arrowSize;
+        ctx.beginPath();ctx.moveTo(x2,y2);
+        ctx.lineTo(ax+dy*arrowSize*0.5,ay-dx*arrowSize*0.5);
+        ctx.lineTo(ax-dy*arrowSize*0.5,ay+dx*arrowSize*0.5);
+        ctx.closePath();ctx.fillStyle=lineColor;ctx.fill();
+
+        ctx.fillStyle='#141820';rr(ctx,mx-(labelW/2),my-11,labelW,22,11);ctx.fill();
+        ctx.strokeStyle=labelBorder;ctx.lineWidth=1;rr(ctx,mx-(labelW/2),my-11,labelW,22,11);ctx.stroke();
+        ctx.font='700 9px Figtree,sans-serif';ctx.fillStyle=labelColor;ctx.textAlign='center';ctx.fillText(labelText,mx,my+4);
+      });
+    });
+
+    // Draw cards
+    lsmProps.forEach(function(p){
+      var totalLoan=lsmTotalLoan(p);
+      var group=lsmGetGroupOf(p.id);
+      var isCross=!!(group&&group.ids.size>1);
+      var isPrimary=!!(group&&group.primaryId===p.id);
+      var iLvr=p.value>0?Math.round(totalLoan/p.value*100):0,iColor=lsmLvrColor(iLvr);
+      var gSec=0,gLoan=0;
+      if(group){ group.ids.forEach(function(id){var pp=lsmProps.find(function(x){return x.id===id;});if(pp){gSec+=pp.value;gLoan+=lsmTotalLoan(pp);}}); }
+      var gLvr=gSec>0?Math.round(gLoan/gSec*100):0,gColor=lsmLvrColor(gLvr);
+      var splitH=(p.splits&&p.splits.length>0)?p.splits.length*30+14:0;
+      var oH=p.offsets.length>0?(32+p.offsets.length*34):0;
+      var gH=isCross?100:0;
+      var cH=80+13+38+52+splitH+gH+oH+24;
+      var x=p.x,y=p.y;
+
+      ctx.fillStyle='rgba(20,24,32,0.07)'; rr(ctx,x+3,y+5,CARD_W,cH,12); ctx.fill();
+      ctx.fillStyle='#fff'; rr(ctx,x,y,CARD_W,cH,12); ctx.fill();
+      if(isPrimary){ ctx.strokeStyle='#d97706'; ctx.lineWidth=2; }
+      else if(isCross){ ctx.strokeStyle='#2960cc'; ctx.lineWidth=1.5; }
+      else { ctx.strokeStyle='#e6e9ee'; ctx.lineWidth=1.5; }
+      rr(ctx,x,y,CARD_W,cH,12); ctx.stroke();
+
+      ctx.fillStyle='#141820'; rr(ctx,x,y,CARD_W,70,12); ctx.fill(); rr(ctx,x,y+46,CARD_W,24,0); ctx.fill();
+      ctx.fillStyle='#ec1560'; ctx.fillRect(x,y+69,CARD_W,2);
+      ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#ec1560'; ctx.textAlign='left'; ctx.fillText('PROPERTY '+p.id,x+13,y+15);
+      ctx.font='700 12.5px Figtree,sans-serif'; ctx.fillStyle='#fff'; ctx.fillText((p.name.length>30?p.name.slice(0,29)+'…':p.name),x+13,y+35);
+
+      var propType=p.type||'oo';
+      var badgeColor=propType==='oo'?'rgba(13,122,82,0.7)':'rgba(41,96,204,0.7)';
+      var badgeText=propType==='oo'?'OWNER OCCUPIED':'INVESTMENT';
+      ctx.fillStyle=badgeColor; rr(ctx,x+12,y+44,propType==='oo'?110:85,16,8); ctx.fill();
+      ctx.font='700 7.5px Figtree,sans-serif'; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText(badgeText,x+21,y+55);
+      if(isPrimary){
+        var bx=x+12+(propType==='oo'?116:91);
+        ctx.fillStyle='rgba(217,119,6,0.5)'; rr(ctx,bx,y+44,114,16,8); ctx.fill();
+        ctx.font='700 7.5px Figtree,sans-serif'; ctx.fillStyle='#fbbf24'; ctx.textAlign='left'; ctx.fillText('★ PRIMARY SECURITY',bx+7,y+55);
+      } else if(isCross){
+        var bx2=x+12+(propType==='oo'?116:91);
+        ctx.fillStyle='rgba(41,96,204,0.25)'; rr(ctx,bx2,y+44,90,16,8); ctx.fill();
+        ctx.font='700 7.5px Figtree,sans-serif'; ctx.fillStyle='#7fb3ff'; ctx.textAlign='left'; ctx.fillText('CROSS SECURED',bx2+7,y+55);
+      }
+
+      var oy=y+80;
+      ctx.fillStyle='#f7f8fa'; rr(ctx,x+10,oy,CARD_W-20,28,6); ctx.fill();
+      ctx.strokeStyle='#e6e9ee'; ctx.lineWidth=1; rr(ctx,x+10,oy,CARD_W-20,28,6); ctx.stroke();
+      ctx.font='700 9px Figtree,sans-serif'; ctx.fillStyle='#9ca3af'; ctx.textAlign='left'; ctx.fillText('LVR',x+18,oy+18);
+      ctx.fillStyle='#e6e9ee'; rr(ctx,x+48,oy+10,162,6,3); ctx.fill();
+      ctx.fillStyle=iColor; rr(ctx,x+48,oy+10,Math.min(iLvr,100)/100*162,6,3); ctx.fill();
+      ctx.font='700 10px Figtree,sans-serif'; ctx.fillStyle=iColor; ctx.textAlign='right'; ctx.fillText(iLvr+'%',x+264,oy+20); oy+=36;
+
+      if(p.splits&&p.splits.length>0){
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#9ca3af'; ctx.textAlign='left'; ctx.fillText('SPLIT LOANS',x+12,oy+12); oy+=20;
+        p.splits.forEach(function(sp){
+          ctx.fillStyle='#fdf0f4'; rr(ctx,x+10,oy,CARD_W-20,24,6); ctx.fill();
+          ctx.strokeStyle='rgba(236,21,96,0.15)'; ctx.lineWidth=1; rr(ctx,x+10,oy,CARD_W-20,24,6); ctx.stroke();
+          ctx.font='600 9.5px Figtree,sans-serif'; ctx.fillStyle='#3d4562'; ctx.textAlign='left'; ctx.fillText(sp.label,x+18,oy+16);
+          ctx.font='700 12px Figtree,sans-serif'; ctx.fillStyle='#ec1560'; ctx.textAlign='right'; ctx.fillText(lsmFmt(sp.amount),x+CARD_W-14,oy+16); oy+=30;
+        });
+        ctx.fillStyle='#f7f8fa'; rr(ctx,x+10,oy,126,44,6); ctx.fill(); rr(ctx,x+144,oy,126,44,6); ctx.fill();
+        ctx.strokeStyle='#e6e9ee'; ctx.lineWidth=1; rr(ctx,x+10,oy,126,44,6); ctx.stroke(); rr(ctx,x+144,oy,126,44,6); ctx.stroke();
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#9ca3af'; ctx.textAlign='left';
+        ctx.fillText('PROPERTY VALUE',x+18,oy+14); ctx.fillText('TOTAL LOANS',x+152,oy+14);
+        ctx.font='700 13px Figtree,sans-serif'; ctx.fillStyle='#141820';
+        ctx.fillText(lsmFmt(p.value),x+18,oy+37); ctx.fillText(lsmFmt(totalLoan),x+152,oy+37); oy+=52;
+      } else {
+        ctx.fillStyle='#f7f8fa'; rr(ctx,x+10,oy,126,44,6); ctx.fill(); rr(ctx,x+144,oy,126,44,6); ctx.fill();
+        ctx.strokeStyle='#e6e9ee'; ctx.lineWidth=1; rr(ctx,x+10,oy,126,44,6); ctx.stroke(); rr(ctx,x+144,oy,126,44,6); ctx.stroke();
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#9ca3af'; ctx.textAlign='left';
+        ctx.fillText('PROPERTY VALUE',x+18,oy+14); ctx.fillText('LOAN AMOUNT',x+152,oy+14);
+        ctx.font='700 13px Figtree,sans-serif'; ctx.fillStyle='#141820';
+        ctx.fillText(lsmFmt(p.value),x+18,oy+37); ctx.fillText(lsmFmt(p.loan),x+152,oy+37); oy+=52;
+      }
+
+      if(isCross){
+        ctx.fillStyle='#e6eeff'; rr(ctx,x+10,oy,126,40,6); ctx.fill(); rr(ctx,x+144,oy,126,40,6); ctx.fill();
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#2960cc'; ctx.textAlign='left';
+        ctx.fillText('GROUP SECURITY',x+18,oy+13); ctx.fillText('GROUP LOAN',x+152,oy+13);
+        ctx.font='700 13px Figtree,sans-serif'; ctx.fillStyle='#1a4a9e';
+        ctx.fillText(lsmFmt(gSec),x+18,oy+34); ctx.fillText(lsmFmt(gLoan),x+152,oy+34); oy+=48;
+        ctx.fillStyle='rgba(41,96,204,0.06)'; rr(ctx,x+10,oy,CARD_W-20,36,6); ctx.fill();
+        ctx.strokeStyle='rgba(41,96,204,0.18)'; ctx.lineWidth=1; rr(ctx,x+10,oy,CARD_W-20,36,6); ctx.stroke();
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#2960cc'; ctx.textAlign='left'; ctx.fillText('JOINT LVR POSITION',x+18,oy+13);
+        ctx.fillStyle='rgba(41,96,204,0.15)'; rr(ctx,x+18,oy+18,CARD_W-50,5,3); ctx.fill();
+        ctx.fillStyle=gColor; rr(ctx,x+18,oy+18,Math.min(gLvr,100)/100*(CARD_W-50),5,3); ctx.fill();
+        ctx.font='700 10px Figtree,sans-serif'; ctx.fillStyle=gColor; ctx.textAlign='right'; ctx.fillText(gLvr+'%',x+CARD_W-14,oy+28); oy+=44;
+      }
+
+      if(p.offsets.length>0){
+        ctx.strokeStyle='#e6e9ee'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x+10,oy); ctx.lineTo(x+CARD_W-10,oy); ctx.stroke(); oy+=10;
+        ctx.font='700 8.5px Figtree,sans-serif'; ctx.fillStyle='#9ca3af'; ctx.textAlign='left'; ctx.fillText('OFFSET ACCOUNTS',x+12,oy+12); oy+=22;
+        p.offsets.forEach(function(o){
+          ctx.fillStyle='#e0f5ed'; rr(ctx,x+10,oy,CARD_W-20,24,6); ctx.fill();
+          ctx.strokeStyle='rgba(13,122,82,0.15)'; ctx.lineWidth=1; rr(ctx,x+10,oy,CARD_W-20,24,6); ctx.stroke();
+          ctx.font='600 10.5px Figtree,sans-serif'; ctx.fillStyle='#0d7a52'; ctx.textAlign='left';
+          ctx.fillText((o.length>32?o.slice(0,31)+'…':o),x+18,oy+17); oy+=30;
+        });
+      }
+    });
+
+    ctx.restore();
+
+    ctx.fillStyle='#141820'; ctx.fillRect(0,TH-FOOTER,TW,FOOTER);
+    ctx.fillStyle='#ec1560'; ctx.fillRect(0,TH-FOOTER,TW,2);
+    var tSec=lsmProps.reduce(function(s,p){return s+p.value;},0);
+    var tLoan=lsmProps.reduce(function(s,p){return s+lsmTotalLoan(p);},0);
+    var portLvr=tSec>0?Math.round(tLoan/tSec*100):0;
+    ctx.font='700 9px Figtree,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='left'; ctx.fillText('PORTFOLIO SUMMARY',24,TH-FOOTER+18);
+    ctx.font='600 10px Figtree,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.65)';
+    ctx.fillText('Security: '+lsmFmt(tSec)+'  |  Total Loans: '+lsmFmt(tLoan)+'  |  Portfolio LVR: '+portLvr+'%  |  Properties: '+lsmProps.length,24,TH-FOOTER+36);
+    ctx.font='400 9px Figtree,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.textAlign='right';
+    ctx.fillText('This diagram is for illustrative purposes only and does not constitute financial advice.  |  findmymortgage.com.au',TW-24,TH-FOOTER+30);
+
+    cv.toBlob(function(blob){
+      var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+      a.download='loan-structure-map-'+Date.now()+'.png'; a.click();
+      lsmShowHint('Map downloaded ✓');
+    });
+  };
+
+  function rr(ctx,x,y,w,h,r){
+    ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.lineTo(x+r,y+h);
+    ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+  }
+
+  /* ── MONEY INPUT FORMATTING ── */
+  function lsmFormatMoneyInput(input){
+    input.addEventListener('input',function(){
+      var pos=this.selectionStart;
+      var raw=this.value.replace(/[^0-9.]/g,'');
+      var parts=raw.split('.');
+      var integer=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+      var formatted=parts.length>1?integer+'.'+parts[1]:integer;
+      var oldVal=this.value;
+      var oldCommasBefore=(oldVal.slice(0,pos).match(/,/g)||[]).length;
+      this.value=formatted;
+      var newCommasBefore=(formatted.slice(0,pos).match(/,/g)||[]).length;
+      var newPos=pos+(newCommasBefore-oldCommasBefore);
+      try{this.setSelectionRange(newPos,newPos);}catch(e){}
+    });
+  }
+  ['lsm-prop-value','lsm-prop-loan'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) lsmFormatMoneyInput(el);
+  });
+
+  /* ── INIT ── */
+  lsmUpdateSummary();
+  lsmShowHint('Click "Add Property" to begin mapping the loan structure',3500);
+
+})();
+</script>
+</body>
+</html>
