@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <style>
-/* ── PRINT STYLES ── */
 @media print {
   html, body { margin: 0 !important; padding: 0 !important; background: #f7f8fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   #lsm-root { height: auto !important; min-height: unset !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; }
@@ -73,7 +72,6 @@
   position: relative; height: 100vh; min-height: 480px;
 }
 
-/* ── TOOLBAR ── */
 #lsm-toolbar {
   background: var(--lsm-primary); padding: 0 20px; height: 60px; min-height: 60px;
   display: flex; align-items: center; gap: 8px;
@@ -96,7 +94,6 @@
 .lsm-btn-light { background: var(--lsm-white); color: var(--lsm-text); border: 1.5px solid var(--lsm-border2); }
 .lsm-btn-light:hover { background: var(--lsm-bg2); }
 
-/* ── LINK MODE PANEL ── */
 #lsm-link-panel {
   display: none; position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
   background: var(--lsm-primary); border: 1.5px solid var(--lsm-blue2);
@@ -107,28 +104,17 @@
 #lsm-link-panel.lsm-show { display: flex; }
 .lsm-link-panel-text { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.8); }
 .lsm-link-panel-text strong { color: #7fb3ff; }
-.lsm-link-panel-count {
-  background: rgba(41,96,204,0.3); border: 1px solid rgba(41,96,204,0.5);
-  border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; color: #7fb3ff;
-}
-.lsm-link-panel-done {
-  background: var(--lsm-blue2); color: #fff; border: none; border-radius: 6px;
-  padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .15s;
-}
+.lsm-link-panel-count { background: rgba(41,96,204,0.3); border: 1px solid rgba(41,96,204,0.5); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; color: #7fb3ff; }
+.lsm-link-panel-done { background: var(--lsm-blue2); color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .15s; }
 .lsm-link-panel-done:hover { background: #1a4a9e; }
-.lsm-link-panel-cancel {
-  background: transparent; color: rgba(255,255,255,0.45); border: none;
-  font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s;
-}
+.lsm-link-panel-cancel { background: transparent; color: rgba(255,255,255,0.45); border: none; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s; }
 .lsm-link-panel-cancel:hover { color: var(--lsm-accent); }
 
-/* ── CANVAS ── */
 #lsm-canvas-wrap { position: relative; overflow: auto; flex: 1; background: var(--lsm-bg); }
 #lsm-canvas-bg { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(var(--lsm-bg3) 1px, transparent 1px), linear-gradient(90deg, var(--lsm-bg3) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.6; }
 #lsm-canvas { position: relative; min-height: 100%; min-width: 100%; }
 #lsm-links-layer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: visible; width: 100%; height: 100%; }
 
-/* ── SUMMARY BAR ── */
 #lsm-summary-bar { background: var(--lsm-primary); border-top: 2px solid var(--lsm-accent); padding: 0 20px; height: 52px; min-height: 52px; display: flex; align-items: center; flex-shrink: 0; overflow-x: auto; }
 .lsm-sum-item { display: flex; flex-direction: column; padding: 0 16px; border-right: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
 .lsm-sum-item:first-child { padding-left: 0; }
@@ -139,7 +125,6 @@
 .lsm-sum-client { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 .lsm-sum-client span { color: rgba(255,255,255,0.75); font-weight: 700; }
 
-/* ── PROPERTY CARDS ── */
 .lsm-prop-card {
   position: absolute; width: 288px; background: var(--lsm-white); border-radius: 12px;
   border: 1.5px solid var(--lsm-border); box-shadow: var(--lsm-shadow); z-index: 10;
@@ -149,8 +134,6 @@
 .lsm-prop-card.lsm-selected { border-color: var(--lsm-blue2) !important; box-shadow: 0 0 0 3px rgba(41,96,204,0.22), var(--lsm-shadow) !important; }
 .lsm-prop-card.lsm-is-primary { border-color: #d97706; box-shadow: 0 0 0 2px rgba(217,119,6,0.18), var(--lsm-shadow); }
 .lsm-prop-card.lsm-dragging { opacity: .92; z-index: 999; transform: scale(1.015); box-shadow: var(--lsm-shadow2); }
-
-/* Link mode: cards glow to invite selection */
 .lsm-link-mode .lsm-prop-card { cursor: pointer !important; }
 .lsm-link-mode .lsm-prop-card:not(.lsm-selected):hover { border-color: rgba(41,96,204,0.5) !important; box-shadow: 0 0 0 2px rgba(41,96,204,0.15), var(--lsm-shadow) !important; }
 
@@ -171,10 +154,8 @@
 .lsm-primary-badge.is-primary { background: rgba(217,119,6,0.28); border-color: rgba(217,119,6,0.55); color: #fbbf24; }
 .lsm-primary-badge.not-primary { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.35); }
 .lsm-primary-badge.not-primary:hover { background: rgba(217,119,6,0.15); border-color: rgba(217,119,6,0.35); color: #fbbf24; }
-.lsm-primary-badge svg { width: 9px; height: 9px; display: block; }
-
-/* Hide primary badge when not in a linked group */
 .lsm-primary-badge.lsm-hidden { display: none !important; }
+.lsm-primary-badge svg { width: 9px; height: 9px; display: block; }
 
 .lsm-icon-btn { width: 25px; height: 25px; border-radius: 5px; border: none; background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.75); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s; }
 .lsm-icon-btn svg { width: 11px; height: 11px; display: block; }
@@ -183,7 +164,6 @@
 
 .lsm-card-body { padding: 12px 12px 10px; }
 
-/* LVR bar */
 .lsm-indiv-lvr { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; background: var(--lsm-bg); border-radius: 6px; padding: 6px 9px; border: 1px solid var(--lsm-border); }
 .lsm-indiv-lvr-label { font-size: 9px; color: var(--lsm-text3); font-weight: 700; text-transform: uppercase; min-width: 30px; flex-shrink: 0; }
 .lsm-indiv-lvr-bar-wrap { flex: 1; height: 5px; background: var(--lsm-bg2); border-radius: 3px; overflow: hidden; min-width: 0; }
@@ -198,7 +178,6 @@
 .lsm-stat-value { font-size: 13px; font-weight: 700; color: var(--lsm-text); }
 .lsm-stat-box.lsm-group .lsm-stat-value { color: var(--lsm-blue); }
 
-/* Split loans */
 .lsm-splits-wrap { margin-bottom: 9px; }
 .lsm-splits-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .lsm-splits-title { font-size: 8.5px; font-weight: 700; color: var(--lsm-text3); letter-spacing: 1px; text-transform: uppercase; }
@@ -211,7 +190,6 @@
 .lsm-split-chip-label { font-size: 9.5px; font-weight: 600; color: var(--lsm-text2); flex-shrink: 0; }
 .lsm-split-chip-amount { font-size: 12px; font-weight: 700; color: var(--lsm-accent); flex: 1; text-align: right; }
 
-/* Joint/cross sections */
 .lsm-joint-lvr { background: rgba(41,96,204,0.06); border-radius: 6px; padding: 8px 10px; margin-bottom: 9px; border: 1px solid rgba(41,96,204,0.15); }
 .lsm-joint-lvr-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .lsm-joint-lvr-title { font-size: 8.5px; font-weight: 700; color: var(--lsm-blue2); letter-spacing: 0.7px; text-transform: uppercase; }
@@ -225,23 +203,10 @@
 .lsm-primary-info { display: flex; align-items: center; gap: 6px; background: rgba(217,119,6,0.10); border: 1px solid rgba(217,119,6,0.28); border-radius: 6px; padding: 5px 9px; font-size: 9px; font-weight: 700; color: #d97706; margin-bottom: 7px; }
 .lsm-primary-info svg { width: 10px; height: 10px; display: block; flex-shrink: 0; }
 
-/* Unlink from group button (per-card) */
 .lsm-unlink-btn { display: flex; align-items: center; gap: 5px; background: rgba(236,21,96,0.07); color: var(--lsm-accent); border: 1px solid rgba(236,21,96,0.2); border-radius: 5px; padding: 5px 9px; font-size: 9.5px; font-weight: 700; cursor: pointer; margin-bottom: 8px; transition: all .18s; width: 100%; justify-content: center; }
 .lsm-unlink-btn:hover { background: var(--lsm-accent); color: #fff; }
 .lsm-unlink-btn svg { width: 10px; height: 10px; display: block; }
 
-/* Offsets */
-.lsm-offsets-wrap { border-top: 1px solid var(--lsm-border); padding: 9px 12px 11px; }
-.lsm-offsets-head { display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; font-weight: 700; color: var(--lsm-text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
-.lsm-offsets-count { background: var(--lsm-green3); color: var(--lsm-green2); border-radius: 10px; padding: 1px 6px; font-size: 8.5px; font-weight: 700; }
-.lsm-offset-chip { display: flex; align-items: center; gap: 7px; background: var(--lsm-green3); border-radius: 6px; padding: 5px 8px; margin-bottom: 5px; border: 1px solid rgba(13,122,82,0.16); }
-.lsm-offset-chip-icon { color: var(--lsm-green2); display: flex; align-items: center; }
-.lsm-offset-chip-icon svg { width: 11px; height: 11px; display: block; }
-.lsm-offset-chip-name { font-size: 10.5px; font-weight: 600; color: var(--lsm-green); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lsm-offset-remove { cursor: pointer; width: 17px !important; height: 17px !important; min-width: 17px !important; max-width: 17px !important; min-height: 17px !important; max-height: 17px !important; aspect-ratio: 1 / 1 !important; border-radius: 50% !important; background: rgba(13,122,82,0.15); color: var(--lsm-green); font-size: 11px; transition: all .15s; border: none !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0; font-weight: 700; line-height: 1 !important; padding: 0 !important; box-sizing: border-box !important; }
-.lsm-offset-remove:hover { background: var(--lsm-accent); color: #fff; }
-
-/* Modals */
 .lsm-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(20,24,32,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
 .lsm-modal { background: var(--lsm-white); border-radius: 12px; padding: 26px; width: 400px; max-width: 92%; box-shadow: 0 20px 60px rgba(20,24,32,0.25); border: 1.5px solid var(--lsm-border); position: relative; z-index: 201; }
 .lsm-modal-title { font-size: 19px; color: var(--lsm-primary); margin-bottom: 4px; font-weight: 800; }
@@ -265,11 +230,19 @@
 .lsm-split-mode-btn { flex: 1; padding: 7px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1.5px solid var(--lsm-border2); background: var(--lsm-bg); color: var(--lsm-text3); cursor: pointer; transition: all .15s; }
 .lsm-split-mode-btn.active { border-color: var(--lsm-accent); background: #fff0f4; color: var(--lsm-accent); }
 
-/* Hint */
+.lsm-offsets-wrap { border-top: 1px solid var(--lsm-border); padding: 9px 12px 11px; }
+.lsm-offsets-head { display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; font-weight: 700; color: var(--lsm-text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
+.lsm-offsets-count { background: var(--lsm-green3); color: var(--lsm-green2); border-radius: 10px; padding: 1px 6px; font-size: 8.5px; font-weight: 700; }
+.lsm-offset-chip { display: flex; align-items: center; gap: 7px; background: var(--lsm-green3); border-radius: 6px; padding: 5px 8px; margin-bottom: 5px; border: 1px solid rgba(13,122,82,0.16); }
+.lsm-offset-chip-icon { color: var(--lsm-green2); display: flex; align-items: center; }
+.lsm-offset-chip-icon svg { width: 11px; height: 11px; display: block; }
+.lsm-offset-chip-name { font-size: 10.5px; font-weight: 600; color: var(--lsm-green); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lsm-offset-remove { cursor: pointer; width: 17px !important; height: 17px !important; min-width: 17px !important; max-width: 17px !important; min-height: 17px !important; max-height: 17px !important; aspect-ratio: 1 / 1 !important; border-radius: 50% !important; background: rgba(13,122,82,0.15); color: var(--lsm-green); font-size: 11px; transition: all .15s; border: none !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0; font-weight: 700; line-height: 1 !important; padding: 0 !important; box-sizing: border-box !important; }
+.lsm-offset-remove:hover { background: var(--lsm-accent); color: #fff; }
+
 .lsm-hint { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: var(--lsm-primary); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; pointer-events: none; opacity: 0; transition: opacity .25s; z-index: 300; white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,0.28); border-left: 3px solid var(--lsm-accent); }
 .lsm-hint.lsm-show { opacity: 1; }
 
-/* Empty state */
 .lsm-empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
 .lsm-empty-icon { width: 64px; height: 64px; background: var(--lsm-bg2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; border: 2px dashed var(--lsm-border2); }
 .lsm-empty-icon svg { width: 28px; height: 28px; display: block; }
@@ -281,7 +254,6 @@
 
 <div id="lsm-root">
 
-  <!-- TOOLBAR -->
   <div id="lsm-toolbar">
     <div class="lsm-brand">
       <img id="lsm-logo-img" src="https://findmymortgage.com.au/wp-content/uploads/2025/09/FindMyMortgage-Site-Logo.png" style="height:auto;width:auto;max-height:36px;max-width:200px;object-fit:contain;border-radius:6px;display:block;flex-shrink:0;" onerror="this.style.display='none'">
@@ -309,7 +281,6 @@
     </button>
   </div>
 
-  <!-- LINK MODE FLOATING PANEL -->
   <div id="lsm-link-panel">
     <span class="lsm-link-panel-text">Click properties to <strong>select for cross-security</strong></span>
     <span class="lsm-link-panel-count" id="lsm-link-count">0 selected</span>
@@ -317,7 +288,6 @@
     <button class="lsm-link-panel-cancel" onclick="lsmToggleLinkMode()">Cancel</button>
   </div>
 
-  <!-- CANVAS -->
   <div id="lsm-canvas-wrap">
     <div id="lsm-canvas-bg"></div>
     <div id="lsm-canvas">
@@ -332,7 +302,6 @@
     </div>
   </div>
 
-  <!-- SUMMARY BAR -->
   <div id="lsm-summary-bar">
     <div class="lsm-sum-item"><span class="lsm-sum-label">Properties</span><span class="lsm-sum-value lsm-accent" id="lsm-sum-props">0</span></div>
     <div class="lsm-sum-item"><span class="lsm-sum-label">Total Security</span><span class="lsm-sum-value" id="lsm-sum-security">$0</span></div>
@@ -343,10 +312,8 @@
     <div class="lsm-sum-client" id="lsm-sum-client-display" style="display:none">Prepared for <span id="lsm-sum-client-name"></span></div>
   </div>
 
-  <!-- HINT -->
   <div class="lsm-hint" id="lsm-hint"></div>
 
-  <!-- ADD / EDIT MODAL -->
   <div class="lsm-overlay" id="lsm-add-modal" style="display:none">
     <div class="lsm-modal">
       <div class="lsm-modal-title" id="lsm-add-modal-title">Add Property</div>
@@ -376,7 +343,6 @@
     </div>
   </div>
 
-  <!-- OFFSET MODAL -->
   <div class="lsm-overlay" id="lsm-offset-modal" style="display:none">
     <div class="lsm-modal">
       <div class="lsm-modal-title">Add Offset Account</div>
@@ -395,14 +361,11 @@
 (function() {
   'use strict';
 
-  // ── STATE ──
-  // lsmGroups: array of groups. Each group = { ids: Set<number>, primaryId: number|null }
-  // A property can only belong to one group.
   var lsmProps = [];
-  var lsmGroups = [];           // cross-security groups
+  var lsmGroups = [];
   var lsmNextId = 1;
   var lsmLinkMode = false;
-  var lsmLinkSelected = new Set(); // ids selected in current link session
+  var lsmLinkSelected = new Set();
   var lsmCurrentOffsetPropId = null;
   var lsmEditingPropId = null;
   var lsmLoanMode = 'single';
@@ -410,7 +373,6 @@
   var lsmLogoDataUrl = null;
   var lsmLogoNaturalW = 0, lsmLogoNaturalH = 0;
 
-  /* ── LOGO ── */
   (function(){
     var img = new Image(); img.crossOrigin='anonymous';
     img.onload=function(){ try{ lsmLogoNaturalW=img.naturalWidth;lsmLogoNaturalH=img.naturalHeight;var c=document.createElement('canvas');c.width=lsmLogoNaturalW;c.height=lsmLogoNaturalH;c.getContext('2d').drawImage(img,0,0);lsmLogoDataUrl=c.toDataURL('image/png');var t=document.getElementById('lsm-logo-img');if(t)t.src=lsmLogoDataUrl; }catch(e){} };
@@ -418,7 +380,6 @@
     img.src='https://findmymortgage.com.au/wp-content/uploads/2025/09/FindMyMortgage-Site-Logo.png';
   })();
 
-  /* ── UTILS ── */
   function lsmFmt(n){ return '$'+Math.round(n).toLocaleString('en-AU'); }
   function lsmParseMoney(s){ return parseFloat(String(s).replace(/[^0-9.]/g,''))||0; }
   function lsmLvrColor(lvr){ return lvr>80?'#ec1560':lvr>60?'#d97706':'#12a36e'; }
@@ -433,18 +394,11 @@
     return p.loan||0;
   }
 
-  /* ── GROUP HELPERS ── */
   function lsmGetGroupOf(propId){
     return lsmGroups.find(function(g){ return g.ids.has(propId); })||null;
   }
-  function lsmGetGroupMembers(propId){
-    var g=lsmGetGroupOf(propId);
-    if(!g) return [];
-    return Array.from(g.ids);
-  }
   function lsmIsInGroup(propId){ return !!lsmGetGroupOf(propId); }
 
-  /* ── CLIENT NAME ── */
   window.lsmUpdateClientDisplay=function(){
     var name=document.getElementById('lsm-client-name').value.trim();
     var display=document.getElementById('lsm-sum-client-display');
@@ -453,7 +407,6 @@
     else { display.style.display='none'; }
   };
 
-  /* ── LOAN MODE ── */
   window.lsmSetLoanMode=function(mode,suppressAutoAdd){
     lsmLoanMode=mode;
     document.getElementById('lsm-single-mode-btn').classList.toggle('active',mode==='single');
@@ -497,7 +450,6 @@
     return splits.filter(function(s){return s.amount>0;});
   }
 
-  /* ── MODALS ── */
   window.lsmOpenAddProperty=function(){
     lsmEditingPropId=null;
     document.getElementById('lsm-add-modal-title').textContent='Add Property';
@@ -579,7 +531,6 @@
     if(e.key==='Escape'){ lsmCloseModal('lsm-add-modal'); lsmCloseModal('lsm-offset-modal'); if(lsmLinkMode) lsmToggleLinkMode(); }
   });
 
-  /* ── ADD PROPERTY ── */
   window.lsmAddProperty=function(){
     var name=document.getElementById('lsm-prop-name').value.trim()||'Property '+lsmNextId;
     var value=lsmParseMoney(document.getElementById('lsm-prop-value').value);
@@ -603,7 +554,6 @@
     lsmShowHint('Property added — drag by the header to reposition');
   };
 
-  /* ── TOGGLE TYPE ── */
   window.lsmToggleType=function(id){
     var p=lsmProps.find(function(x){return x.id===id;});
     if(!p) return;
@@ -612,26 +562,16 @@
     lsmShowHint(p.type==='oo'?'Marked as Owner Occupied':'Marked as Investment');
   };
 
-  /* ── TOGGLE PRIMARY SECURITY ──
-   * Only visible/active when the card is in a group.
-   * Turning ON: clears any other primary in same group, sets this one.
-   * Turning OFF: clears primary for whole group → all spokes disappear (links remain but undirected).
-   * Actually per spec: "If i unselect primary, all spokes are removed and all properties unlink."
-   * So toggling off primary = dissolve the group entirely.
-   */
   window.lsmTogglePrimary=function(id){
     var p=lsmProps.find(function(x){return x.id===id;});
     if(!p) return;
     var group=lsmGetGroupOf(id);
-    if(!group) return; // not in a group; badge should be hidden
-
+    if(!group) return;
     if(group.primaryId===id){
-      // Turning OFF primary → dissolve entire group
       lsmDissolveGroup(group);
       lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
       lsmShowHint('Primary removed — group unlinked. Re-link properties to reconnect.');
     } else {
-      // Turning ON primary for this card
       group.primaryId=id;
       lsmRerenderAll(); lsmUpdateLinks();
       lsmShowHint('★ '+p.name+' set as Primary Security');
@@ -642,36 +582,22 @@
     lsmGroups=lsmGroups.filter(function(g){return g!==group;});
   }
 
-  /* ── UNLINK ONE PROPERTY FROM ITS GROUP ──
-   * Removes the property from the group. If group has <2 members left → dissolve.
-   */
   window.lsmUnlinkFromGroup=function(propId){
     var group=lsmGetGroupOf(propId);
     if(!group) return;
     group.ids.delete(propId);
-    // If primary was this card, clear primary
     if(group.primaryId===propId) group.primaryId=null;
-    // If less than 2 remain, dissolve
     if(group.ids.size<2) lsmDissolveGroup(group);
     lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
     lsmShowHint('Property removed from cross-security group ✓');
   };
 
-  /* ── LINK MODE ──
-   * 1. User clicks "Link" → enter link mode
-   * 2. User clicks cards to select (toggle)
-   * 3. User clicks "Link Selected" → confirm
-   * 4. If any selected card is already in a group → merge all into that group
-   *    Otherwise → create new group
-   * 5. Primary badge appears on all cards in group; user picks one
-   */
   window.lsmToggleLinkMode=function(){
     lsmLinkMode=!lsmLinkMode;
     lsmLinkSelected.clear();
     var btn=document.getElementById('lsm-link-mode-btn');
     var panel=document.getElementById('lsm-link-panel');
     var canvas=document.getElementById('lsm-canvas-wrap');
-
     if(lsmLinkMode){
       btn.classList.add('lsm-active');
       panel.classList.add('lsm-show');
@@ -682,7 +608,6 @@
       btn.classList.remove('lsm-active');
       panel.classList.remove('lsm-show');
       canvas.classList.remove('lsm-link-mode');
-      // Clear selection highlights
       lsmProps.forEach(function(p){
         var el=document.getElementById('lsm-prop-'+p.id);
         if(el) el.classList.remove('lsm-selected');
@@ -695,7 +620,6 @@
     document.getElementById('lsm-link-count').textContent=count+' selected';
   }
 
-  /* Called when a card is clicked in link mode */
   function lsmHandleLinkClick(id){
     if(!lsmLinkMode) return;
     var el=document.getElementById('lsm-prop-'+id);
@@ -715,26 +639,18 @@
       lsmShowHint('Select at least 2 properties to link');
       return;
     }
-    // Collect all selected ids
     var selectedIds=Array.from(lsmLinkSelected);
-
-    // Find any existing groups that contain these ids
     var affectedGroups=[];
     selectedIds.forEach(function(id){
       var g=lsmGetGroupOf(id);
       if(g&&affectedGroups.indexOf(g)===-1) affectedGroups.push(g);
     });
-
     if(affectedGroups.length===0){
-      // New group
       lsmGroups.push({ids:new Set(selectedIds),primaryId:null});
     } else if(affectedGroups.length===1){
-      // Merge selected into existing group
       selectedIds.forEach(function(id){ affectedGroups[0].ids.add(id); });
     } else {
-      // Merge multiple groups + selected into one
       var masterGroup=affectedGroups[0];
-      // Take primaryId from first group that has one
       var existingPrimary=null;
       affectedGroups.forEach(function(g){if(g.primaryId&&!existingPrimary) existingPrimary=g.primaryId;});
       affectedGroups.slice(1).forEach(function(g){
@@ -744,13 +660,11 @@
       selectedIds.forEach(function(id){ masterGroup.ids.add(id); });
       if(existingPrimary) masterGroup.primaryId=existingPrimary;
     }
-
-    lsmToggleLinkMode(); // exit link mode, clear highlights
+    lsmToggleLinkMode();
     lsmRerenderAll(); lsmUpdateLinks(); lsmUpdateSummary();
     lsmShowHint('Properties linked ✓ — click ★ Set Primary on the main security card',3500);
   };
 
-  /* ── SVG ICON HELPERS ── */
   function svgIcon(viewBox,w,h,paths){ return '<svg viewBox="'+viewBox+'" width="'+w+'" height="'+h+'" style="display:block;overflow:visible">'+paths+'</svg>'; }
   function svgPath(d,color){ return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
   function svgPoly(pts,color){ return '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'; }
@@ -771,13 +685,24 @@
   var ICO_STAR_OFF=svgIcon('0 0 24 24',9,9,'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>');
   var ICO_STAR_INFO=svgIcon('0 0 24 24',10,10,'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(217,119,6,0.3)" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>');
 
-  /* ── RENDER CARD ── */
+  /* ── CARD HEIGHT ESTIMATOR ──
+   * Returns approximate vertical centre of a rendered card for spoke anchoring.
+   * Header ~70px + body content + offsets section.
+   */
+  function lsmCardCenterY(p){
+    var isCross=!!(lsmGetGroupOf(p.id)&&lsmGetGroupOf(p.id).ids.size>1);
+    var splitH=(p.splits&&p.splits.length>0)?p.splits.length*30+14:0;
+    var oH=p.offsets.length>0?(32+p.offsets.length*34):0;
+    var gH=isCross?100:0;
+    var cardH=70+13+38+52+splitH+gH+oH+24;
+    return p.y + cardH/2;
+  }
+
   function lsmRenderCard(p){
     var totalLoan=lsmTotalLoan(p);
     var group=lsmGetGroupOf(p.id);
     var isCross=!!(group&&group.ids.size>1);
     var isPrimary=!!(group&&group.primaryId===p.id);
-    var hasPrimarySet=!!(group&&group.primaryId);
 
     var indivLvr=p.value>0?Math.round(totalLoan/p.value*100):0;
     var indivColor=lsmLvrColor(indivLvr);
@@ -797,7 +722,6 @@
       ?'<span class="lsm-prop-type-badge oo" onclick="lsmToggleType('+p.id+')" title="Click to toggle">'+ICO_OO+'Owner Occupied</span>'
       :'<span class="lsm-prop-type-badge inv" onclick="lsmToggleType('+p.id+')" title="Click to toggle">'+ICO_INV+'Investment</span>';
 
-    // Primary badge — only show when in a group
     var primaryBadge='';
     if(isCross){
       if(isPrimary){
@@ -807,20 +731,9 @@
       }
     }
 
-    // Cross badge — always show CROSS SECURED when in a group (regardless of primary)
-    var crossBadge=isCross
-      ?'<div class="lsm-cross-badge">'+ICO_LINK+'Cross Secured</div>'
-      :'';
-
-    // Primary info banner on body (only on the primary card, only when primary has been set)
-    var primaryInfo=(isCross&&isPrimary)
-      ?'<div class="lsm-primary-info">'+ICO_STAR_INFO+'Primary Security — spokes point to this property</div>'
-      :'';
-
-    // "Remove from group" button on non-primary linked cards
-    var unlinkHTML=isCross&&!isPrimary
-      ?'<button class="lsm-unlink-btn" onclick="lsmUnlinkFromGroup('+p.id+')">'+ICO_UNLINK+'Remove from cross-security group</button>'
-      :'';
+    var crossBadge=isCross?'<div class="lsm-cross-badge">'+ICO_LINK+'Cross Secured</div>':'';
+    var primaryInfo=(isCross&&isPrimary)?'<div class="lsm-primary-info">'+ICO_STAR_INFO+'Primary Security — spokes point to this property</div>':'';
+    var unlinkHTML=isCross&&!isPrimary?'<button class="lsm-unlink-btn" onclick="lsmUnlinkFromGroup('+p.id+')">'+ICO_UNLINK+'Remove from cross-security group</button>':'';
 
     var groupRowHTML=isCross
       ?'<div class="lsm-stat-row">'
@@ -909,7 +822,6 @@
       +'</div>'
       +offsetsHTML;
 
-    // Link mode card click
     el.addEventListener('click',function(e){
       if(!lsmLinkMode) return;
       if(e.target.closest('.lsm-icon-btn')||e.target.closest('.lsm-offset-remove')||e.target.closest('.lsm-unlink-btn')) return;
@@ -918,7 +830,6 @@
   }
   window.lsmRenderCard=lsmRenderCard;
 
-  /* ── DRAG ── */
   function lsmMakeDraggable(el,p){
     var sX,sY,sL,sT,dragging=false;
     el.addEventListener('mousedown',function(e){
@@ -953,14 +864,7 @@
     });
   }
 
-  /* ── LINK LINES ──
-   * Rules:
-   * - Only draw lines when a group has a primaryId set
-   * - Draw one spoke from each non-primary member to the primary
-   * - All spokes are BLUE, all labelled "CROSS SECURED"
-   * - Arrow points TO the primary
-   * - No primary set → no lines drawn at all
-   */
+  /* ── LINK LINES ── spokes anchor to card horizontal centre, vertical card centre */
   function lsmUpdateLinks(){
     var svg=document.getElementById('lsm-links-layer');
     svg.innerHTML='';
@@ -971,7 +875,7 @@
     var ns='http://www.w3.org/2000/svg';
 
     lsmGroups.forEach(function(group){
-      if(!group.primaryId) return; // no primary = no spokes
+      if(!group.primaryId) return;
       var primaryProp=lsmProps.find(function(p){return p.id===group.primaryId;});
       if(!primaryProp) return;
 
@@ -983,28 +887,25 @@
       var labelWidth=112;
 
       group.ids.forEach(function(id){
-        if(id===group.primaryId) return; // no self-spoke
+        if(id===group.primaryId) return;
         var spokeProp=lsmProps.find(function(p){return p.id===id;});
         if(!spokeProp) return;
 
-        // spoke: from non-primary → primary
-        var x1=spokeProp.x+144, y1=spokeProp.y+70;
-        var x2=primaryProp.x+144, y2=primaryProp.y+70;
+        // Anchor spokes at horizontal centre (x+144) and vertical card centre
+        var x1=spokeProp.x+144, y1=lsmCardCenterY(spokeProp);
+        var x2=primaryProp.x+144, y2=lsmCardCenterY(primaryProp);
         var mx=(x1+x2)/2, my=(y1+y2)/2;
 
-        // Glow
         var glow=document.createElementNS(ns,'path');
         glow.setAttribute('d','M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2);
         glow.setAttribute('stroke',glowColor); glow.setAttribute('stroke-width','8'); glow.setAttribute('fill','none');
         svg.appendChild(glow);
 
-        // Main bezier
         var path=document.createElementNS(ns,'path');
         path.setAttribute('d','M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2);
         path.setAttribute('stroke',lineColor); path.setAttribute('stroke-width','2'); path.setAttribute('fill','none');
         svg.appendChild(path);
 
-        // Arrowhead at primary (x2,y2)
         var dx=x2-mx, dy=y2-my;
         var len=Math.sqrt(dx*dx+dy*dy)||1; dx/=len; dy/=len;
         var arrowSize=9;
@@ -1014,7 +915,6 @@
         arrow.setAttribute('fill',lineColor);
         svg.appendChild(arrow);
 
-        // Label pill
         var bg=document.createElementNS(ns,'rect');
         bg.setAttribute('x',mx-(labelWidth/2)); bg.setAttribute('y',my-11);
         bg.setAttribute('width',labelWidth); bg.setAttribute('height',22);
@@ -1033,7 +933,6 @@
     });
   }
 
-  /* ── OFFSETS ── */
   window.lsmOpenOffsetModal=function(id){
     lsmCurrentOffsetPropId=id;
     var p=lsmProps.find(function(x){return x.id===id;});
@@ -1057,10 +956,8 @@
     if(p){ p.offsets.splice(idx,1); lsmRenderCard(p); lsmUpdateSummary(); }
   };
 
-  /* ── DELETE ── */
   window.lsmDeleteProperty=function(id){
     if(!confirm('Remove this property from the map?')) return;
-    // Remove from group if any
     var group=lsmGetGroupOf(id);
     if(group){
       group.ids.delete(id);
@@ -1077,7 +974,6 @@
 
   function lsmRerenderAll(){ lsmProps.forEach(function(p){ lsmRenderCard(p); }); }
 
-  /* ── SUMMARY ── */
   function lsmUpdateSummary(){
     var tSec=lsmProps.reduce(function(s,p){return s+p.value;},0);
     var tLoan=lsmProps.reduce(function(s,p){return s+lsmTotalLoan(p);},0);
@@ -1090,13 +986,11 @@
     document.getElementById('lsm-sum-offsets').textContent=tOff;
   }
 
-  /* ── PRINT ── */
   window.lsmPrint=function(){
     if(lsmProps.length===0){ lsmShowHint('Add some properties first!'); return; }
     window.print();
   };
 
-  /* ── DOWNLOAD ── */
   window.lsmDownload=function(){
     if(lsmProps.length===0){ lsmShowHint('Add some properties first!'); return; }
     var SCALE=2,PAD=60,TOOLBAR=72,FOOTER=52,CARD_W=288;
@@ -1144,7 +1038,7 @@
 
     ctx.save(); ctx.translate(0,TOOLBAR);
 
-    // Draw spokes (only when primary is set)
+    // Draw spokes — anchored to card horizontal centre and vertical card centre
     lsmGroups.forEach(function(group){
       if(!group.primaryId) return;
       var primaryProp=lsmProps.find(function(p){return p.id===group.primaryId;});
@@ -1156,7 +1050,8 @@
         if(id===group.primaryId) return;
         var spokeProp=lsmProps.find(function(p){return p.id===id;});
         if(!spokeProp) return;
-        var x1=spokeProp.x+144,y1=spokeProp.y+70,x2=primaryProp.x+144,y2=primaryProp.y+70;
+
+        var x1=spokeProp.x+144,y1=lsmCardCenterY(spokeProp),x2=primaryProp.x+144,y2=lsmCardCenterY(primaryProp);
         var mx=(x1+x2)/2,my=(y1+y2)/2;
 
         ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo(mx,y1,mx,y2,x2,y2);
@@ -1303,7 +1198,6 @@
     ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
   }
 
-  /* ── MONEY INPUT FORMATTING ── */
   function lsmFormatMoneyInput(input){
     input.addEventListener('input',function(){
       var pos=this.selectionStart;
@@ -1324,7 +1218,6 @@
     if(el) lsmFormatMoneyInput(el);
   });
 
-  /* ── INIT ── */
   lsmUpdateSummary();
   lsmShowHint('Click "Add Property" to begin mapping the loan structure',3500);
 
